@@ -1,6 +1,6 @@
 from mcp_server import mcp, base_url
-from models import BaseResponse
 from httpx import AsyncClient
+from mcp.server.fastmcp import Context
 
 @mcp.tool()
 async def pdf_to_json(
@@ -15,6 +15,7 @@ async def pdf_to_json(
     line_grouping: str | None = None,
     password: str | None = None,
     name: str | None = None,
+    ctx: Context | None = None,
     ) -> dict:
     """
     Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved using the /pdf/convert/to/json2 endpoint.
@@ -37,6 +38,8 @@ async def pdf_to_json(
     Returns:
         The response from the PDF.co API. The response contains a jobId.
     """
+    if ctx:
+        ctx.info(f"Converting PDF to JSON: {url}")
     payload = {
         "url": url,
     }
@@ -51,11 +54,22 @@ async def pdf_to_json(
     if password is not None: payload["password"] = password
     if name is not None: payload["name"] = name
 
-    async with AsyncClient(base_url=base_url) as client:
-        response = await client.post(
-            "/v1/pdf/convert/to/json2", 
-            json=payload, 
-            headers={
-                "x-api-key": x_api_key,
-            })
-    return response.json()
+    if ctx:
+        ctx.info(f"Payload: {payload}")
+    try:
+        async with AsyncClient(base_url=base_url) as client:
+            if ctx:
+                ctx.info(f"Calling PDF.co API")
+            response = await client.post(
+                "/v1/pdf/convert/to/json2", 
+                json=payload, 
+                headers={
+                    "x-api-key": x_api_key,
+                })
+            if ctx:
+                ctx.info(f"Response: {response.json()}")
+            return response.json()
+    except Exception as e:
+        if ctx:
+            ctx.error(f"Error: {e}")
+        raise e

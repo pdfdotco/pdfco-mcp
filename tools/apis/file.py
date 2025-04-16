@@ -1,9 +1,10 @@
 from mcp_server import mcp, base_url
 from models import BaseResponse
 from httpx import AsyncClient
+from mcp.server.fastmcp import Context
 
 @mcp.tool()
-async def upload_file(file_path: str, x_api_key: str) -> BaseResponse:
+async def upload_file(file_path: str, x_api_key: str, ctx: Context) -> BaseResponse:
     """
     Upload a file to the PDF.co API
     Args:
@@ -12,18 +13,27 @@ async def upload_file(file_path: str, x_api_key: str) -> BaseResponse:
     Returns:
         The response from the PDF.co API
     """
-    async with AsyncClient(base_url=base_url) as client:
-        response = await client.post(
-            "/v1/file/upload", 
-            files={
+    if ctx:
+        ctx.info(f"Uploading file: {file_path}")
+    try:
+        async with AsyncClient(base_url=base_url) as client:
+            response = await client.post(
+                "/v1/file/upload", 
+                files={
                 "file": open(file_path, "rb"),
             }, headers={
                 "x-api-key": x_api_key,
             })
-    return response.json()
+            if ctx:
+                ctx.info(f"Response: {response.json()}")
+            return response.json()
+    except Exception as e:
+        if ctx:
+            ctx.error(f"Error: {e}")
+        raise e
 
 @mcp.tool()
-async def download_file(url: str, path: str) -> str:
+async def download_file(url: str, path: str, ctx: Context) -> str:
     """
     Get a result file from the PDF.co API
     Args:
@@ -32,10 +42,17 @@ async def download_file(url: str, path: str) -> str:
     Returns:
         The path to the file
     """
-    if not url.startswith("https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com"):
-        raise ValueError("URL must start with https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com")
-    async with AsyncClient() as client:
-        response = await client.get(url)
-        with open(path, "wb") as file:
-            file.write(response.content)
-        return path
+    if ctx:
+        ctx.info(f"Downloading file: {url}")
+    try:
+        if not url.startswith("https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com"):
+            raise ValueError("URL must start with https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com")
+        async with AsyncClient() as client:
+            response = await client.get(url)
+            with open(path, "wb") as file:
+                file.write(response.content)
+            return path
+    except Exception as e:
+        if ctx:
+            ctx.error(f"Error: {e}")
+        raise e
