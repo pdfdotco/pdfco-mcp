@@ -14,7 +14,7 @@ async def upload_file(file_path: str, x_api_key: str, ctx: Context) -> BaseRespo
         The response from the PDF.co API
     """
     if ctx:
-        ctx.info(f"Uploading file: {file_path}")
+        await ctx.info(f"Uploading file: {file_path}")
     try:
         async with AsyncClient(base_url=base_url) as client:
             response = await client.post(
@@ -25,11 +25,11 @@ async def upload_file(file_path: str, x_api_key: str, ctx: Context) -> BaseRespo
                 "x-api-key": x_api_key,
             })
             if ctx:
-                ctx.info(f"Response: {response.json()}")
+                await ctx.info(f"Response: {response.json()}")
             return response.json()
     except Exception as e:
         if ctx:
-            ctx.error(f"Error: {e}")
+            await ctx.error(f"Error: {e}")
         raise e
 
 @mcp.tool()
@@ -43,7 +43,7 @@ async def download_file(url: str, path: str, ctx: Context) -> str:
         The path to the file
     """
     if ctx:
-        ctx.info(f"Downloading file: {url}")
+        await ctx.info(f"Downloading file: {url}")
     try:
         if not url.startswith("https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com"):
             raise ValueError("URL must start with https://pdf-temp-files-stage.s3.us-west-2.amazonaws.com")
@@ -54,5 +54,5 @@ async def download_file(url: str, path: str, ctx: Context) -> str:
             return path
     except Exception as e:
         if ctx:
-            ctx.error(f"Error: {e}")
+            await ctx.error(f"Error: {e}")
         raise e

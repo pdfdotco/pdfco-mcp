@@ -44,13 +44,13 @@ async def call_pdf_co_api(method: str, path: str, body: dict, x_api_key: str, ct
         The response from the API
     """
     async with httpx.AsyncClient(base_url=base_url) as client:
-        ctx.info(f"Calling {method} {path} with body {body}")
+        await ctx.info(f"Calling {method} {path} with body {body}")
         try:    
             response = await client.request(method, path, json=body, headers={"x-api-key": x_api_key})
-            ctx.info(f"Response: {response.json()}")
+            await ctx.info(f"Response: {response.json()}")
             return response.json()
         except Exception as e:
-            ctx.error(f"Error: {e}")
+            await ctx.error(f"Error: {e}")
             return {"error": e}
         
 if __name__ == "__main__":
