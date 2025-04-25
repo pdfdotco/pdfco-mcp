@@ -1,33 +1,33 @@
-from mcp_server import mcp, base_url
-from models import JobStatusResponse
-from httpx import AsyncClient
-from mcp.server.fastmcp import Context
+from mcp_server import mcp
+from models import BaseResponse
+from services.client import PDFCoClient
+from pydantic import Field
 
 @mcp.tool()
-async def get_job_check(job_id: str, x_api_key: str, ctx: Context) -> JobStatusResponse:
+async def get_job_check(
+    job_id: str = Field(description="The ID of the job to get the status of")
+) -> BaseResponse:
     """
     Check the status and results of a job
-    If you are using conversion tools, you should use this tool to check the status of the job before using the output link.
-    
-    Args:
-        job_id: The ID of the job to get the status of
-        x_api_key: The API key to use for the job status check
-    Returns:
-        The response from the PDF.co API
+    Status can be:
+    - working: background job is currently in work or does not exist.
+    - success: background job was successfully finished.
+    - failed: background job failed for some reason (see message for more details).
+    - aborted: background job was aborted.
+    - unknown: unknown background job id. Available only when force is set to true for input request.
     """
-    if ctx:
-        await ctx.info(f"Getting job status for: {job_id}")
     try:
-        async with AsyncClient(base_url=base_url) as client:
+        async with PDFCoClient() as client:
             response = await client.post("/v1/job/check", json={
                 "jobId": job_id,
-            }, headers={
-                "x-api-key": x_api_key,
             })
-            if ctx:
-                await ctx.info(f"Response: {response.json()}")
-            return response.json()
+            return BaseResponse(
+                status=response.json()["status"],
+                content=response.json(),
+                tips="You can download the result if status is success",
+            )
     except Exception as e:
-        if ctx:
-            await ctx.error(f"Error: {e}")
-        raise e
+        return BaseResponse(
+            status="error",
+            content=str(e),
+        )

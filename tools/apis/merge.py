@@ -1,13 +1,13 @@
-from mcp_server import mcp, base_url
-from httpx import AsyncClient
+from mcp_server import mcp
+from services.client import PDFCoClient
 from mcp.server.fastmcp import Context
+from models import BaseResponse
 
 @mcp.tool()
 async def pdf_to_merge(
     url: str,
-    x_api_key: str,
     ctx: Context,
-    ) -> dict:
+    ) -> BaseResponse:
     """
     Merge PDF from two or more PDF, DOC, XLS, images, even ZIP with documents and images into a new PDF.
 
@@ -15,10 +15,6 @@ async def pdf_to_merge(
 
     Args:
         url: URLs to the source files (comma-separated). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage.
-        x_api_key: The API key.
-
-    Returns:
-        The response from the PDF.co API.
     """
     if ctx:
         await ctx.info(f"Merging PDFs: {url}")
@@ -31,19 +27,20 @@ async def pdf_to_merge(
     if ctx:
         await ctx.info(f"Payload: {payload}")
     try:
-        async with AsyncClient(base_url=base_url) as client:
+        async with PDFCoClient() as client:
             if ctx:
                 await ctx.info(f"Calling PDF.co API")
             response = await client.post(
                 "/v1/pdf/merge2", 
-                json=payload, 
-                headers={
-                    "x-api-key": x_api_key,
-                })
+                json=payload)
             if ctx:
                 await ctx.info(f"Response: {response.json()}")
-            return response.json()
+            return BaseResponse(
+                status="success",
+                content=response.json(),
+            )
     except Exception as e:
-        if ctx:
-            await ctx.error(f"Error: {e}")
-        raise e
+        return BaseResponse(
+            status="error",
+            content=str(e),
+        )
