@@ -1,7 +1,9 @@
-from mcp_server import mcp
-from services.client import PDFCoClient
-from models import BaseResponse, ConversionParams, ImageConversionParams
+from pdfco.mcp.server import mcp
+from pdfco.mcp.services.client import PDFCoClient
+from pdfco.mcp.models import BaseResponse, ConversionParams
+
 from pydantic import Field
+
 async def _convert_pdf(endpoint: str, params: ConversionParams) -> BaseResponse:
     """Helper function to handle PDF conversion with common logic"""
     payload = params.parse_payload(async_mode=True)

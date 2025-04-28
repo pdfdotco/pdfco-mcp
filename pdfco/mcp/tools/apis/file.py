@@ -1,6 +1,7 @@
-from mcp_server import mcp
-from models import BaseResponse
-from services.client import PDFCoClient
+from pdfco.mcp.server import mcp
+from pdfco.mcp.services.client import PDFCoClient
+from pdfco.mcp.models import BaseResponse
+
 from pydantic import Field
 
 @mcp.tool()

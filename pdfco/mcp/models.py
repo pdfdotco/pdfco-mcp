@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Any
+
 class BaseResponse(BaseModel):
     status: str
     content: Any
@@ -34,6 +35,3 @@ class ConversionParams(BaseModel):
         if self.name: payload["name"] = self.name
 
         return payload
-
-class ImageConversionParams(ConversionParams):
-    type: str = Field(description="Type of image to convert to. (jpg, png, webp, tiff) (Optional)", default="jpg", choices=["jpg", "png", "webp", "tiff"])
