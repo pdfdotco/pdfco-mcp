@@ -17,6 +17,7 @@ class ConversionParams(BaseModel):
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0")
     password: str = Field(description="Password of the PDF file. (Optional)", default="")
     name: str = Field(description="File name for the generated output. (Optional)", default="")
+    autosize: bool = Field(description="Controls automatic page sizing. If true, page dimensions adjust to content. If false, uses worksheet’s page setup. (Optional)", default=False)
 
     def parse_payload(self, async_mode: bool = True):
         payload = {
@@ -33,5 +34,46 @@ class ConversionParams(BaseModel):
         if self.line_grouping: payload["lineGrouping"] = self.line_grouping
         if self.password: payload["password"] = self.password
         if self.name: payload["name"] = self.name
-
+        if self.autosize: payload["autosize"] = self.autosize
+        
         return payload
+
+class HtmlConversionParams(ConversionParams):
+    html: str = Field(description="Input HTML code to be converted. To convert the link to a PDF use the /pdf/convert/from/url endpoint instead.", default="")
+    templateId: str = Field(description="Set to the ID of your HTML template. You can find and copy the ID from HTML to PDF Templates.", default="")
+    templateData: str = Field(description="Set it to a string with input JSON data (recommended) or CSV data.", default="")
+    margins: str = Field(description="Set to CSS style margins like 10px, 5mm, 5in for all sides or 5px 5px 5px 5px (the order of margins is top, right, bottom, left). (Optional)", default="")
+    paperSize: str = Field(description="A4 is set by default. Can be Letter, Legal, Tabloid, Ledger, A0, A1, A2, A3, A4, A5, A6 or a custom size. Custom size can be set in px (pixels), mm or in (inches) with width and height separated by space like this: 200 300, 200px 300px, 200mm 300mm, 20cm 30cm or 6in 8in. (Optional)", default="")
+    orientation: str = Field(description="Set to Portrait or Landscape. Portrait is set by default. (Optional)", default="")
+    printBackground: bool = Field(description="true by default. Set to false to disable printing of background. (Optional)", default=True)
+    mediaType: str = Field(description="Uses print by default. Set to screen to convert HTML as it appears in a browser or print to convert as it appears for printing or none to set none as mediaType for CSS styles. (Optional)", default="")
+    DoNotWaitFullLoad: bool = Field(description="false by default. Set to true to skip waiting for full load (like full video load etc. that may affect the total conversion time). (Optional)", default=False)
+    header: str = Field(description="User definable HTML for the header to be applied on every page header. (Optional)", default="")
+    footer: str = Field(description="User definable HTML for the footer to be applied on every page footer. (Optional)", default="")
+
+    def parse_payload(self, async_mode: bool = True):
+        payload = super().parse_payload(async_mode)
+        if self.margins: payload["margins"] = self.margins
+        if self.paperSize: payload["paperSize"] = self.paperSize
+        if self.orientation: payload["orientation"] = self.orientation
+        if self.printBackground: payload["printBackground"] = self.printBackground
+        if self.mediaType: payload["mediaType"] = self.mediaType
+        if self.DoNotWaitFullLoad: payload["DoNotWaitFullLoad"] = self.DoNotWaitFullLoad
+        if self.html: payload["html"] = self.html
+        if self.header: payload["header"] = self.header
+        if self.footer: payload["footer"] = self.footer
+        if self.templateId: payload["templateId"] = self.templateId
+        if self.templateData: payload["templateData"] = self.templateData
+        
+        return payload
+
+
+class ExcelConversionParams(ConversionParams):
+    worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default="")
+    
+    def parse_payload(self, async_mode: bool = True):
+        payload = super().parse_payload(async_mode)
+        if self.worksheetIndex: payload["worksheetIndex"] = self.worksheetIndex
+        return payload
+    
+    
