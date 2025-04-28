@@ -11,3 +11,4 @@ wheels/
 .env
 .cursor
 sandbox
+.DS_Store

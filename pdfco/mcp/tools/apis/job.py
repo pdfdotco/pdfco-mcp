@@ -24,9 +24,12 @@ async def get_job_check(
             response = await client.post("/v1/job/check", json={
                 "jobId": job_id,
             })
+            json_data = response.json()
             return BaseResponse(
-                status=response.json()["status"],
-                content=response.json(),
+                status=json_data["status"],
+                content=json_data,
+                credits_used=json_data.get("credits"),
+                credits_remaining=json_data.get("remainingCredits"),
                 tips="You can download the result if status is success",
             )
     except Exception as e:
@@ -45,13 +48,28 @@ async def wait_job_completion(
     Wait for a job to complete
     """
     start_time = time.time()
+    job_check_count = 0
+    credits_used = 0
+    credits_remaining = 0
     while True:
         response = await get_job_check(job_id)
+        job_check_count += 1
+        credits_used += response.credits_used
+        credits_remaining = response.credits_remaining
         if response.status == "success":
-            return response
+            return BaseResponse(
+                status="success",
+                content=response.content,
+                credits_used=credits_used,
+                credits_remaining=credits_remaining,
+                tips=f"Job check count: {job_check_count}",
+            )
         await asyncio.sleep(interval)
         if time.time() - start_time > timeout:
             return BaseResponse(
                 status="error",
                 content="Job timed out",
+                credits_used=credits_used,
+                credits_remaining=credits_remaining,
+                tips=f"Job check count: {job_check_count}",
             )

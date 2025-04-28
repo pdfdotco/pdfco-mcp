@@ -1,6 +1,6 @@
 from pdfco.mcp.server import mcp
 from pdfco.mcp.services.service import convert_to, convert_from
-from pdfco.mcp.models import BaseResponse, ConversionParams, HtmlConversionParams, ExcelConversionParams
+from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
     
@@ -174,8 +174,8 @@ async def document_to_pdf(
     return await convert_from("pdf", "doc", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
 
 @mcp.tool()
-async def spreadsheet_to_pdf(
-    url: str = Field(description="URL to the source file (XLS, XLSX, CSV). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
+async def csv_to_pdf(
+    url: str = Field(description="URL to the source file (CSV, XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
     autosize: bool = Field(description="Controls automatic page sizing. If true, page dimensions adjust to content. If false, uses worksheet’s page setup. (Optional)", default=False),
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
@@ -183,14 +183,14 @@ async def spreadsheet_to_pdf(
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
 ) -> BaseResponse:
     """
-    Convert spreadsheet files (XLS, XLSX, CSV) to PDF.
+    Convert CSV or spreadsheet files (XLS, XLSX) to PDF.
     Ref: https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-csv
     """
     return await convert_from("pdf", "csv", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
 
 @mcp.tool()
 async def image_to_pdf(
-    url: str = Field(description="URL to the source file (JPG, PNG, TIFF). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
+    url: str = Field(description="URL to the source file (JPG, PNG, TIFF). Multiple files are supported (by providing a comma-separated list of URLs). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     pages: str = Field(description="Comma-separated page indices (e.g., '0, 1, 2-' or '1, 3-7'). Use '!' for inverted page numbers (e.g., '!0' for last page). Processes all pages if None. (Optional)", default=""),
@@ -233,11 +233,11 @@ async def webpage_to_pdf(
     ```html
     <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
     """
-    return await convert_from("pdf", "url", HtmlConversionParams(url=url, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await convert_from("pdf", "url", ConversionParams(url=url, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
 
 @mcp.tool()
 async def html_to_pdf(
-    html: str = Field(description="Input HTML code to be converted. To convert the link to a PDF use the /pdf/convert/from/url endpoint instead."),
+    html: str = Field(description="Input HTML code to be converted. To convert the link to a PDF use the /pdf/convert/from/url endpoint instead. If it is a local file, just pass the file content as a string."),
     margins: str = Field(description="Set to CSS style margins like 10px, 5mm, 5in for all sides or 5px 5px 5px 5px (the order of margins is top, right, bottom, left). (Optional)", default=""),
     paperSize: str = Field(description="A4 is set by default. Can be Letter, Legal, Tabloid, Ledger, A0, A1, A2, A3, A4, A5, A6 or a custom size. Custom size can be set in px (pixels), mm or in (inches) with width and height separated by space like this: 200 300, 200px 300px, 200mm 300mm, 20cm 30cm or 6in 8in. (Optional)", default=""),
     orientation: str = Field(description="Set to Portrait or Landscape. Portrait is set by default. (Optional)", default=""),
@@ -265,7 +265,7 @@ async def html_to_pdf(
     ```html
     <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
     """
-    return await convert_from("pdf", "html", HtmlConversionParams(html=html, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await convert_from("pdf", "html", ConversionParams(html=html, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
 
 @mcp.tool()
 async def html_template_to_pdf(
@@ -319,7 +319,7 @@ async def html_template_to_pdf(
     ```html
     <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
     """
-    return await convert_from("pdf", "html/template", HtmlConversionParams(templateId=templateId, templateData=templateData, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await convert_from("pdf", "html/template", ConversionParams(templateId=templateId, templateData=templateData, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
 
 @mcp.tool()
 async def email_to_pdf(
@@ -348,7 +348,7 @@ async def excel_to_csv(
     Convert Excel(XLS, XLSX) to CSV.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "csv", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
 @mcp.tool()
 async def excel_to_json(
@@ -362,7 +362,7 @@ async def excel_to_json(
     Convert Excel(XLS, XLSX) to JSON.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "json", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "json", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
 @mcp.tool()
 async def excel_to_html(
@@ -376,7 +376,7 @@ async def excel_to_html(
     Convert Excel(XLS, XLSX) to HTML.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "html", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
 @mcp.tool()
 async def excel_to_txt(
@@ -390,7 +390,7 @@ async def excel_to_txt(
     Convert Excel(XLS, XLSX) to TXT.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "txt", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "txt", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
 @mcp.tool()
 async def excel_to_xml(
@@ -404,7 +404,7 @@ async def excel_to_xml(
     Convert Excel(XLS, XLSX) to XML.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "xml", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
 @mcp.tool()
 async def excel_to_pdf(
@@ -418,4 +418,4 @@ async def excel_to_pdf(
     Convert Excel(XLS, XLSX) to PDF.
     Ref: https://developer.pdf.co/api/convert-excel/index.html
     """
-    return await convert_to("xls", "pdf", ExcelConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "pdf", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
