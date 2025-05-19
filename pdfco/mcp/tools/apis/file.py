@@ -44,23 +44,6 @@ async def download_file(
             raise ValueError("URL must start with https://pdf-temp-files.s3.us-west-2.amazonaws.com")
         async with PDFCoClient() as client:
             response = await client.get(url)
-            if response.headers.get("Content-Type", "").startswith("application/json"):
-                json_data = response.json()
-                paths = []
-                if isinstance(json_data, list) and len(json_data) > 0:
-                    target = Path(path)
-                    target_dir = target.parent
-                    for idx, item in enumerate(json_data):
-                        target_path = target_dir / f'{target.stem}_{idx}.{target.suffix}'
-                        await download_file(item, target_path)
-                        paths.append(str(target_path))
-                return BaseResponse(
-                    status="success",
-                    content={
-                        "paths": paths,
-                    },
-                    tips=f"Result files saved to {paths}",
-                )
             with open(path, "wb") as file:
                 file.write(response.content)
             return BaseResponse(
