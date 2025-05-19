@@ -3,7 +3,6 @@ from pdfco.mcp.services.pdf import find_text_in_pdf, find_table_in_pdf
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
-from typing import Literal
 
 
 @mcp.tool(name="find_text")
@@ -13,7 +12,7 @@ async def find_text(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     pages: str = Field(description="Comma-separated list of page indices (or ranges) to process. Leave empty for all pages. Example: '0,2-5,7-'. The first-page index is 0. (Optional)", default=""),
-    wordMatchingMode: Literal["SmartMatch", "ExactMatch", "None"] = Field(description="Values can be either SmartMatch, ExactMatch, or None. (Optional)", default=None),
+    wordMatchingMode: str = Field(description="Values can be either SmartMatch, ExactMatch, or None. (Optional)", default=None),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     regexSearch: bool = Field(description="Set to True to enable regular expressions in the search string. (Optional)", default=False),
 ) -> BaseResponse:

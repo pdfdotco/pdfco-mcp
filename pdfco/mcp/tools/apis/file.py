@@ -59,23 +59,23 @@ async def download_file(
             content=str(e),
         )
 
-@mcp.tool()
-async def read_html(
-    file_path: str = Field(description="The absolute path to the HTML file to read"),
-    encoding: str = Field(description="The encoding of the HTML file. (Optional)", default="utf-8"),
-) -> BaseResponse:
-    """
-    Read local HTML file before converting to PDF.
-    """
-    path = Path(file_path)
-    if not path.exists() or not path.is_file():
-        return BaseResponse(
-            status="error",
-            content=f"File not found: {path}",
-        )
-    if path.suffix.lower() != ".html":
-        return BaseResponse(
-            status="error",
-            content=f"File is not an HTML file: {path}",
-        )
-    return path.read_text(encoding=encoding)
+# @mcp.tool()
+# async def read_html(
+#     file_path: str = Field(description="The absolute path to the HTML file to read"),
+#     encoding: str = Field(description="The encoding of the HTML file. (Optional)", default="utf-8"),
+# ) -> BaseResponse:
+#     """
+#     Read local HTML file before converting to PDF.
+#     """
+#     path = Path(file_path)
+#     if not path.exists() or not path.is_file():
+#         return BaseResponse(
+#             status="error",
+#             content=f"File not found: {path}",
+#         )
+#     if path.suffix.lower() != ".html":
+#         return BaseResponse(
+#             status="error",
+#             content=f"File is not an HTML file: {path}",
+#         )
+#     return path.read_text(encoding=encoding)

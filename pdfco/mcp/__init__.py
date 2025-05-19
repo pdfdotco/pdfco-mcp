@@ -1,5 +1,5 @@
 from pdfco.mcp.server import mcp
-from pdfco.mcp.tools.apis import conversion, job, file, modification, form, search, searchable, page
+from pdfco.mcp.tools.apis import conversion, job, file, modification, form, search, searchable, page, security, document
     
 def main():
     mcp.run(transport="stdio")

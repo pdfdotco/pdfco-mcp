@@ -56,6 +56,15 @@ async def rotate_pdf_pages(params: ConversionParams, angle: int) -> BaseResponse
 async def auto_rotate_pdf_pages(params: ConversionParams) -> BaseResponse:
     return await request('pdf/edit/rotate/auto', params)
 
+async def get_pdf_info(params: ConversionParams) -> BaseResponse:
+    return await request('pdf/info', params)
+
+async def add_pdf_password(params: ConversionParams, **kwargs) -> BaseResponse:
+    return await request('pdf/security/add', params, custom_payload=kwargs)
+
+async def remove_pdf_password(params: ConversionParams) -> BaseResponse:
+    return await request('pdf/security/remove', params)
+
 async def request(endpoint: str, params: ConversionParams, custom_payload: dict = None) -> BaseResponse:
     payload = params.parse_payload(async_mode=True)
     if custom_payload:
