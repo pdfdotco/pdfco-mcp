@@ -64,6 +64,13 @@ async def wait_job_completion(
                 credits_remaining=credits_remaining,
                 tips=f"Job check count: {job_check_count}",
             )
+        elif response.status == "failed":
+            return BaseResponse(
+                status="error",
+                content=response.message,
+                credits_used=credits_used,
+                credits_remaining=credits_remaining,
+            )
         await asyncio.sleep(interval)
         if time.time() - start_time > timeout:
             return BaseResponse(

@@ -1,5 +1,5 @@
 from pdfco.mcp.server import mcp
-from pdfco.mcp.services.service import convert_to, convert_from
+from pdfco.mcp.services.pdf import convert_to, convert_from
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
