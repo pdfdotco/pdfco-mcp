@@ -65,6 +65,15 @@ async def add_pdf_password(params: ConversionParams, **kwargs) -> BaseResponse:
 async def remove_pdf_password(params: ConversionParams) -> BaseResponse:
     return await request('pdf/security/remove', params)
 
+async def parse_invoice(params: ConversionParams) -> BaseResponse:
+    return await request('ai-invoice-parser', params)
+
+async def parse_document(params: ConversionParams, custom_payload: dict = None) -> BaseResponse:
+    return await request('pdf/documentparser', params, custom_payload=custom_payload)
+
+async def extract_pdf_attachments(params: ConversionParams) -> BaseResponse:
+    return await request('pdf/attachments/extract', params)
+
 async def request(endpoint: str, params: ConversionParams, custom_payload: dict = None) -> BaseResponse:
     payload = params.parse_payload(async_mode=True)
     if custom_payload:
@@ -82,7 +91,7 @@ async def request(endpoint: str, params: ConversionParams, custom_payload: dict 
                 content=json_data,
                 credits_used=json_data.get("credits"),
                 credits_remaining=json_data.get("remainingCredits"),
-                tips=f"You **should** use the 'wait_job_completion' tool to wait for the job [{json_data['jobId']}] to complete",
+                tips=f"You **should** use the 'wait_job_completion' tool to wait for the job [{json_data.get('jobId')}] to complete if a jobId is present.",
             )
     except Exception as e:
         return BaseResponse(
