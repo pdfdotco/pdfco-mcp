@@ -25,6 +25,17 @@ async def fill_pdf_form_fields(params: ConversionParams, fields: list = None, an
         custom_payload["annotations"] = annotations
     return await request('pdf/edit/add', params, custom_payload=custom_payload)
 
+async def pdf_add(params: ConversionParams, **kwargs) -> BaseResponse:
+    """General PDF Add function that supports all PDF Add API parameters"""
+    custom_payload = {}
+    
+    # Add all supported parameters
+    for key, value in kwargs.items():
+        if value is not None and value != "":
+            custom_payload[key] = value
+    
+    return await request('pdf/edit/add', params, custom_payload=custom_payload)
+
 async def find_text_in_pdf(params: ConversionParams, search_string: str, regex_search: bool = False, word_matching_mode: str = None) -> BaseResponse:
     custom_payload = {
         "searchString": search_string,
