@@ -20,7 +20,7 @@ async def pdf_to_json(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved using the /pdf/convert/to/json2 endpoint.
-    Ref: https://developer.pdf.co/api/pdf-to-json/index.html#post-tag-pdf-to-json2
+    Ref: https://developer.pdf.co/api-reference/pdf-to-json/basic.md
     """
     return await convert_to("pdf", "json2", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -39,7 +39,7 @@ async def pdf_to_csv(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into CSV representation with layout, columns, rows, and tables.
-    Ref: https://developer.pdf.co/api/pdf-to-csv/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-csv.md
     """
     return await convert_to("pdf", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -58,7 +58,7 @@ async def pdf_to_text(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to text with layout preserved.
-    Ref: https://developer.pdf.co/api/pdf-to-text/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-text/basic.md
     """
     return await convert_to("pdf", "text", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -77,7 +77,7 @@ async def pdf_to_xls(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLS (Excel 97-2003) format.
-    Ref: https://developer.pdf.co/api/pdf-to-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xls.md
     """
     return await convert_to("pdf", "xls", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -96,7 +96,7 @@ async def pdf_to_xlsx(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLSX (Excel 2007+) format.        
-    Ref: https://developer.pdf.co/api/pdf-to-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xlsx.md
     """
     return await convert_to("pdf", "xlsx", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -115,7 +115,7 @@ async def pdf_to_xml(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XML format.
-    Ref: https://developer.pdf.co/api/pdf-to-xml/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-xml.md
     """
     return await convert_to("pdf", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -134,7 +134,7 @@ async def pdf_to_html(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to HTML format.
-    Ref: https://developer.pdf.co/api/pdf-to-html/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-to-html.md
     """
     return await convert_to("pdf", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -154,7 +154,11 @@ async def pdf_to_image(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to various image formats (JPG, PNG, WebP, TIFF).
-    Ref: https://developer.pdf.co/api/pdf-to-image/index.html
+    Ref:
+     - https://developer.pdf.co/api-reference/pdf-to-image/jpg.md
+     - https://developer.pdf.co/api-reference/pdf-to-image/png.md
+     - https://developer.pdf.co/api-reference/pdf-to-image/webp.md
+     - https://developer.pdf.co/api-reference/pdf-to-image/tiff.md
     """
     return await convert_to("pdf", type, ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
 
@@ -169,7 +173,7 @@ async def document_to_pdf(
 ) -> BaseResponse:
     """
     Convert various document types (DOC, DOCX, RTF, TXT, XLS, XLSX, CSV, HTML, JPG, PNG, TIFF, WEBP) into PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-document/index.html#post-pdf-convert-from-doc
+    Ref: https://developer.pdf.co/api-reference/pdf-from-document/doc.md
     """
     return await convert_from("pdf", "doc", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
 
@@ -184,7 +188,7 @@ async def csv_to_pdf(
 ) -> BaseResponse:
     """
     Convert CSV or spreadsheet files (XLS, XLSX) to PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-csv
+    Ref: https://developer.pdf.co/api-reference/pdf-from-document/csv.md
     """
     return await convert_from("pdf", "csv", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
 
@@ -198,7 +202,7 @@ async def image_to_pdf(
 ) -> BaseResponse:
     """
     Convert various image formats (JPG, PNG, TIFF) to PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-image/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-from-image.md
     ```
     """
     return await convert_from("pdf", "image", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
@@ -220,7 +224,7 @@ async def webpage_to_pdf(
 ) -> BaseResponse:
     """
     Convert external webpage URL to PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-url/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-from-url.md
     
     The header and footer parameters can contain valid HTML markup with the following classes used to inject printing values into them:
     - date: formatted print date
@@ -252,7 +256,7 @@ async def html_to_pdf(
 ) -> BaseResponse:
     """
     Convert HTML to PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-html/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-from-html/convert.md
     
     The header and footer parameters can contain valid HTML markup with the following classes used to inject printing values into them:
     - date: formatted print date
@@ -278,7 +282,7 @@ async def email_to_pdf(
 ) -> BaseResponse:
     """
     Convert email to PDF.
-    Ref: https://developer.pdf.co/api/pdf-from-email/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-from-email.md
     """
     return await convert_from("pdf", "email", ConversionParams(url=url, embedAttachments=embedAttachments, convertAttachments=convertAttachments, margins=margins, paperSize=paperSize, orientation=orientation))
     
@@ -292,7 +296,7 @@ async def excel_to_csv(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to CSV.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/csv.md
     """
     return await convert_to("xls", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
@@ -306,7 +310,7 @@ async def excel_to_json(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to JSON.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/json.md
     """
     return await convert_to("xls", "json", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
@@ -320,7 +324,7 @@ async def excel_to_html(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to HTML.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/html.md
     """
     return await convert_to("xls", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
@@ -334,7 +338,7 @@ async def excel_to_txt(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to TXT.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/text.md
     """
     return await convert_to("xls", "txt", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
@@ -348,7 +352,7 @@ async def excel_to_xml(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to XML.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/xml.md
     """
     return await convert_to("xls", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
 
@@ -362,6 +366,6 @@ async def excel_to_pdf(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to PDF.
-    Ref: https://developer.pdf.co/api/convert-excel/index.html
+    Ref: https://developer.pdf.co/api-reference/convert-from-excel/pdf.md
     """
     return await convert_to("xls", "pdf", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))

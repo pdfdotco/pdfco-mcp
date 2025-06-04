@@ -11,7 +11,7 @@ async def ai_invoice_parser(
 ) -> BaseResponse:
     """
     AI Invoice Parser: Extracts data from invoices using AI.
-    Ref: https://developer.pdf.co/api/ai-invoice-parser/index.html
+    Ref: https://developer.pdf.co/api-reference/ai-invoice-parser.md
     """
     
     # Pass arguments directly; ConversionParams now handles Optional[str] with default=None
@@ -31,7 +31,7 @@ async def extract_attachments(
 ) -> BaseResponse:
     """
     Extracts attachments from a source PDF file.
-    Ref: https://developer.pdf.co/api/extract-attachments/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-extract-attachments.md
     """
     params = ConversionParams(
         url=url,

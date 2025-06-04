@@ -14,7 +14,7 @@ async def pdf_merge(
 ) -> BaseResponse:
     """
     Merge PDF from two or more PDF, DOC, XLS, images, even ZIP with documents and images into a new PDF.
-    Ref: https://developer.pdf.co/api/pdf-merge/index.html#post-tag-pdf-merge2
+    Ref: https://developer.pdf.co/api-reference/merge/various-files.md
     """
     return await merge_pdf(ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name))
 
@@ -29,7 +29,7 @@ async def pdf_split(
 ) -> BaseResponse:
     """
     Split a PDF into multiple PDF files using page indexes or page ranges.
-    Ref: https://developer.pdf.co/api/pdf-split/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-split/by-pages.md
     """
     params = ConversionParams(
         url=url,

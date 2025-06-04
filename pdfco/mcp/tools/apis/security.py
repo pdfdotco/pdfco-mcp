@@ -26,7 +26,7 @@ async def pdf_add_password(
 ) -> BaseResponse:
     """
     Add password protection to a PDF file.
-    Ref: https://developer.pdf.co/api/password-and-security/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-password/add.md
     """
     params = ConversionParams(
         url=url,
@@ -83,7 +83,7 @@ async def pdf_remove_password(
 ) -> BaseResponse:
     """
     Remove password protection from a PDF file.
-    Ref: https://developer.pdf.co/api/password-and-security/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-password/remove.md
     """
     params = ConversionParams(
         url=url,
