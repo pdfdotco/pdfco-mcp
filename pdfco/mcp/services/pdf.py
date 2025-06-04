@@ -68,9 +68,6 @@ async def remove_pdf_password(params: ConversionParams) -> BaseResponse:
 async def parse_invoice(params: ConversionParams) -> BaseResponse:
     return await request('ai-invoice-parser', params)
 
-async def parse_document(params: ConversionParams, custom_payload: dict = None) -> BaseResponse:
-    return await request('pdf/documentparser', params, custom_payload=custom_payload)
-
 async def extract_pdf_attachments(params: ConversionParams) -> BaseResponse:
     return await request('pdf/attachments/extract', params)
 
