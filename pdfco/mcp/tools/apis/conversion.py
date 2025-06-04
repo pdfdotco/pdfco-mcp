@@ -268,60 +268,6 @@ async def html_to_pdf(
     return await convert_from("pdf", "html", ConversionParams(html=html, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
 
 @mcp.tool()
-async def html_template_to_pdf(
-    templateId: str = Field(description="Set to the ID of your HTML template. You can find and copy the ID from HTML to PDF Templates."),
-    templateData: str = Field(description="Set it to a string with input JSON data (recommended) or CSV data."),
-    margins: str = Field(description="Set to CSS style margins like 10px, 5mm, 5in for all sides or 5px 5px 5px 5px (the order of margins is top, right, bottom, left). (Optional)", default=""),
-    paperSize: str = Field(description="A4 is set by default. Can be Letter, Legal, Tabloid, Ledger, A0, A1, A2, A3, A4, A5, A6 or a custom size. Custom size can be set in px (pixels), mm or in (inches) with width and height separated by space like this: 200 300, 200px 300px, 200mm 300mm, 20cm 30cm or 6in 8in. (Optional)", default=""),
-    orientation: str = Field(description="Set to Portrait or Landscape. Portrait is set by default. (Optional)", default=""),
-    printBackground: bool = Field(description="true by default. Set to false to disable printing of background. (Optional)", default=True),
-    mediaType: str = Field(description="Uses print by default. Set to screen to convert HTML as it appears in a browser or print to convert as it appears for printing or none to set none as mediaType for CSS styles. (Optional)", default=""),
-    DoNotWaitFullLoad: bool = Field(description="false by default. Set to true to skip waiting for full load (like full video load etc. that may affect the total conversion time). (Optional)", default=False),
-    header: str = Field(description="User definable HTML for the header to be applied on every page header. (Optional)", default=""),
-    footer: str = Field(description="User definable HTML for the footer to be applied on every page footer. (Optional)", default=""),
-    httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
-    httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
-    name: str = Field(description="File name for the generated output. (Optional)", default=""),
-) -> BaseResponse:
-    """
-    Convert HTML to PDF using a template.
-    Ref: https://developer.pdf.co/api/pdf-from-html/index.html
-    
-    ## HTML Templates
-    Use the dashboard to manage your HTML to PDF Templates.
-    Templates use {{Mustache}} and Handlebars templating syntax. You just need to insert macros surrounded by double brackets like {{ and }}.
-    - Find out more about Mustache.
-    - Find out more about Handlebars.
-    Some Examples of macro inside html template:
-    - {{variable1}} will be replaced with test if you set templateData to { "variable1": "test"}
-    - {{object1.variable1}} will be replaced with test if you set templateData to { "object1": { "variable1": "test"} }
-    - Simple conditions are also supported. For example: {{#if paid}} invoice was paid {{/if}} will show invoice was paid when templateData is set to { "paid": true }.
-    
-    Sample JSON input
-    ```json
-    { 'paid': true, 'invoice_id': '0002', 'total': '$999.99' }
-    ```
-    
-    Sample CSV input
-    ```csv
-    paid,invoice_id,total
-    true,0002,$999.99
-    ```
-    
-    The header and footer parameters can contain valid HTML markup with the following classes used to inject printing values into them:
-    - date: formatted print date
-    - title: document title
-    - url: document location
-    - pageNumber: current page number
-    - totalPages: total pages in the document
-    - img: tag is supported in both the header and footer parameter, provided that the src attribute is specified as a base64-encoded string.
-    For example, the following markup will generate Page N of NN page numbering:
-    ```html
-    <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
-    """
-    return await convert_from("pdf", "html/template", ConversionParams(templateId=templateId, templateData=templateData, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
-
-@mcp.tool()
 async def email_to_pdf(
     url: str = Field(description="URL to the source file (MSG, EML). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
     embedAttachments: bool = Field(description="Set to true to automatically embeds all attachments from original input email MSG or EML files into the final output PDF. Set it to false if you don’t want to embed attachments so it will convert only the body of the input email. True by default.", default=True),
