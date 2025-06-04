@@ -43,16 +43,6 @@ async def make_pdf_searchable(params: ConversionParams) -> BaseResponse:
 async def make_pdf_unsearchable(params: ConversionParams) -> BaseResponse:
     return await request('pdf/makeunsearchable', params)
 
-async def delete_pdf_pages(params: ConversionParams) -> BaseResponse:
-    return await request('pdf/edit/delete-pages', params)
-
-async def rotate_pdf_pages(params: ConversionParams, angle: int) -> BaseResponse:
-    custom_payload = {"angle": angle}
-    return await request('pdf/edit/rotate', params, custom_payload=custom_payload)
-
-async def auto_rotate_pdf_pages(params: ConversionParams) -> BaseResponse:
-    return await request('pdf/edit/rotate/auto', params)
-
 async def get_pdf_info(params: ConversionParams) -> BaseResponse:
     return await request('pdf/info', params)
 
