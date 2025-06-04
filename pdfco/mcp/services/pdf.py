@@ -14,9 +14,6 @@ async def merge_pdf(params: ConversionParams) -> BaseResponse:
 async def split_pdf(params: ConversionParams) -> BaseResponse:
     return await request(f'pdf/split', params)
 
-async def optimize_pdf(params: ConversionParams) -> BaseResponse:
-    return await request('pdf/optimize', params)
-
 async def get_pdf_form_fields_info(params: ConversionParams) -> BaseResponse:
     return await request('pdf/info/fields', params)
 

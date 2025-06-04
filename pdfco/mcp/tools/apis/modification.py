@@ -1,5 +1,5 @@
 from pdfco.mcp.server import mcp
-from pdfco.mcp.services.pdf import merge_pdf, split_pdf, optimize_pdf
+from pdfco.mcp.services.pdf import merge_pdf, split_pdf
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
@@ -41,25 +41,3 @@ async def pdf_split(
     )
     
     return await split_pdf(params)
-
-@mcp.tool()
-async def pdf_optimize(
-    url: str = Field(description="URL to the source PDF file. Supports publicly accessible links, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
-    httpusername: str = Field(description="HTTP auth user name if required to access source URL. (Optional)", default=""),
-    httppassword: str = Field(description="HTTP auth password if required to access source URL. (Optional)", default=""),
-    name: str = Field(description="File name for the generated output. (Optional)", default=""),
-    password: str = Field(description="Password of the input PDF file. (Optional)", default=""),
-) -> BaseResponse:
-    """
-    Optimize a PDF document to reduce its size.
-    Ref: https://developer.pdf.co/api/pdf-optimize/index.html
-    """
-    common_params = ConversionParams(
-        url=url,
-        httpusername=httpusername,
-        httppassword=httppassword,
-        name=name,
-        password=password
-    )
-        
-    return await optimize_pdf(common_params)
