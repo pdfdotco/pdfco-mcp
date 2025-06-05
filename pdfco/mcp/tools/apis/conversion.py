@@ -4,7 +4,6 @@ from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
     
-
 @mcp.tool()
 async def pdf_to_json(
     url: str = Field(description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
@@ -17,12 +16,13 @@ async def pdf_to_json(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved using the /pdf/convert/to/json2 endpoint.
     Ref: https://developer.pdf.co/api-reference/pdf-to-json/basic.md
     """
-    return await convert_to("pdf", "json2", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "json2", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name), api_key=api_key)
 
 @mcp.tool()
 async def pdf_to_csv(
@@ -36,12 +36,13 @@ async def pdf_to_csv(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into CSV representation with layout, columns, rows, and tables.
     Ref: https://developer.pdf.co/api-reference/pdf-to-csv.md
     """
-    return await convert_to("pdf", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_text(
@@ -55,12 +56,13 @@ async def pdf_to_text(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to text with layout preserved.
     Ref: https://developer.pdf.co/api-reference/pdf-to-text/basic.md
     """
-    return await convert_to("pdf", "text", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "text", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_xls(
@@ -74,12 +76,13 @@ async def pdf_to_xls(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLS (Excel 97-2003) format.
     Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xls.md
     """
-    return await convert_to("pdf", "xls", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "xls", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_xlsx(
@@ -93,12 +96,13 @@ async def pdf_to_xlsx(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLSX (Excel 2007+) format.        
     Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xlsx.md
     """
-    return await convert_to("pdf", "xlsx", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "xlsx", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_xml(
@@ -112,12 +116,13 @@ async def pdf_to_xml(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XML format.
     Ref: https://developer.pdf.co/api-reference/pdf-to-xml.md
     """
-    return await convert_to("pdf", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_html(
@@ -131,12 +136,13 @@ async def pdf_to_html(
     line_grouping: str = Field(description="Enables line grouping within table cells when set to '1'. (Optional)", default="0"),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to HTML format.
     Ref: https://developer.pdf.co/api-reference/pdf-to-html.md
     """
-    return await convert_to("pdf", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def pdf_to_image(
@@ -151,6 +157,7 @@ async def pdf_to_image(
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     type: str = Field(description="Type of image to convert to. (jpg, png, webp, tiff) (Optional)", default="jpg", choices=["jpg", "png", "webp", "tiff"]),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to various image formats (JPG, PNG, WebP, TIFF).
@@ -160,7 +167,7 @@ async def pdf_to_image(
      - https://developer.pdf.co/api-reference/pdf-to-image/webp.md
      - https://developer.pdf.co/api-reference/pdf-to-image/tiff.md
     """
-    return await convert_to("pdf", type, ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name))
+    return await convert_to("pdf", type, ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, unwrap=unwrap, rect=rect, lang=lang, line_grouping=line_grouping, password=password, name=name, api_key=api_key))
 
 @mcp.tool()
 async def document_to_pdf(
@@ -170,12 +177,13 @@ async def document_to_pdf(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     pages: str = Field(description="Comma-separated page indices (e.g., '0, 1, 2-' or '1, 3-7'). Use '!' for inverted page numbers (e.g., '!0' for last page). Processes all pages if None. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert various document types (DOC, DOCX, RTF, TXT, XLS, XLSX, CSV, HTML, JPG, PNG, TIFF, WEBP) into PDF.
     Ref: https://developer.pdf.co/api-reference/pdf-from-document/doc.md
     """
-    return await convert_from("pdf", "doc", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
+    return await convert_from("pdf", "doc", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name, api_key=api_key))
 
 @mcp.tool()
 async def csv_to_pdf(
@@ -185,12 +193,13 @@ async def csv_to_pdf(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     pages: str = Field(description="Comma-separated page indices (e.g., '0, 1, 2-' or '1, 3-7'). Use '!' for inverted page numbers (e.g., '!0' for last page). Processes all pages if None. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert CSV or spreadsheet files (XLS, XLSX) to PDF.
     Ref: https://developer.pdf.co/api-reference/pdf-from-document/csv.md
     """
-    return await convert_from("pdf", "csv", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
+    return await convert_from("pdf", "csv", ConversionParams(url=url, autosize=autosize, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name, api_key=api_key))
 
 @mcp.tool()
 async def image_to_pdf(
@@ -199,13 +208,14 @@ async def image_to_pdf(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     pages: str = Field(description="Comma-separated page indices (e.g., '0, 1, 2-' or '1, 3-7'). Use '!' for inverted page numbers (e.g., '!0' for last page). Processes all pages if None. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert various image formats (JPG, PNG, TIFF) to PDF.
     Ref: https://developer.pdf.co/api-reference/pdf-from-image.md
     ```
     """
-    return await convert_from("pdf", "image", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name))
+    return await convert_from("pdf", "image", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, pages=pages, name=name, api_key=api_key))
 
 @mcp.tool()
 async def webpage_to_pdf(
@@ -221,6 +231,7 @@ async def webpage_to_pdf(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert external webpage URL to PDF.
@@ -237,7 +248,7 @@ async def webpage_to_pdf(
     ```html
     <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
     """
-    return await convert_from("pdf", "url", ConversionParams(url=url, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await convert_from("pdf", "url", ConversionParams(url=url, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name, api_key=api_key))
 
 @mcp.tool()
 async def html_to_pdf(
@@ -253,6 +264,7 @@ async def html_to_pdf(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert HTML to PDF.
@@ -269,7 +281,7 @@ async def html_to_pdf(
     ```html
     <span style='font-size:10px'>Page <span class='pageNumber'></span> of <span class='totalPages'></span>.</span>
     """
-    return await convert_from("pdf", "html", ConversionParams(html=html, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await convert_from("pdf", "html", ConversionParams(html=html, margins=margins, paperSize=paperSize, orientation=orientation, printBackground=printBackground, mediaType=mediaType, DoNotWaitFullLoad=DoNotWaitFullLoad, header=header, footer=footer, httpusername=httpusername, httppassword=httppassword, name=name, api_key=api_key))
 
 @mcp.tool()
 async def email_to_pdf(
@@ -279,12 +291,13 @@ async def email_to_pdf(
     margins: str = Field(description="Set to CSS style margins like 10px, 5mm, 5in for all sides or 5px 5px 5px 5px (the order of margins is top, right, bottom, left). (Optional)", default=""),
     paperSize: str = Field(description="A4 is set by default. Can be Letter, Legal, Tabloid, Ledger, A0, A1, A2, A3, A4, A5, A6 or a custom size. Custom size can be set in px (pixels), mm or in (inches) with width and height separated by space like this: 200 300, 200px 300px, 200mm 300mm, 20cm 30cm or 6in 8in. (Optional)", default=""),
     orientation: str = Field(description="Set to Portrait or Landscape. Portrait is set by default. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert email to PDF.
     Ref: https://developer.pdf.co/api-reference/pdf-from-email.md
     """
-    return await convert_from("pdf", "email", ConversionParams(url=url, embedAttachments=embedAttachments, convertAttachments=convertAttachments, margins=margins, paperSize=paperSize, orientation=orientation))
+    return await convert_from("pdf", "email", ConversionParams(url=url, embedAttachments=embedAttachments, convertAttachments=convertAttachments, margins=margins, paperSize=paperSize, orientation=orientation, api_key=api_key))
     
 @mcp.tool()
 async def excel_to_csv(
@@ -293,12 +306,13 @@ async def excel_to_csv(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to CSV.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/csv.md
     """
-    return await convert_to("xls", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "csv", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))
 
 @mcp.tool()
 async def excel_to_json(
@@ -307,12 +321,13 @@ async def excel_to_json(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to JSON.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/json.md
     """
-    return await convert_to("xls", "json", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "json", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))
 
 @mcp.tool()
 async def excel_to_html(
@@ -321,12 +336,13 @@ async def excel_to_html(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to HTML.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/html.md
     """
-    return await convert_to("xls", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "html", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))
 
 @mcp.tool()
 async def excel_to_txt(
@@ -335,12 +351,13 @@ async def excel_to_txt(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to TXT.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/text.md
     """
-    return await convert_to("xls", "txt", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "txt", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))
 
 @mcp.tool()
 async def excel_to_xml(
@@ -349,12 +366,13 @@ async def excel_to_xml(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to XML.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/xml.md
     """
-    return await convert_to("xls", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "xml", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))
 
 @mcp.tool()
 async def excel_to_pdf(
@@ -363,9 +381,10 @@ async def excel_to_pdf(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     worksheetIndex: str = Field(description="Index of the worksheet to convert. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to PDF.
     Ref: https://developer.pdf.co/api-reference/convert-from-excel/pdf.md
     """
-    return await convert_to("xls", "pdf", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex))
+    return await convert_to("xls", "pdf", ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name, worksheetIndex=worksheetIndex, api_key=api_key))

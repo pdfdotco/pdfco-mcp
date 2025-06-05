@@ -7,13 +7,14 @@ from pydantic import Field
 
 @mcp.tool()
 async def upload_file(
-    file_path: str = Field(description="The absolute path to the file to upload"), 
+    file_path: str = Field(description="The absolute path to the file to upload"),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None)
 ) -> BaseResponse:
     """
     Upload a file to the PDF.co API
     """
     try:
-        async with PDFCoClient() as client:
+        async with PDFCoClient(api_key=api_key) as client:
             response = await client.post(
                 "/v1/file/upload", 
                 files={

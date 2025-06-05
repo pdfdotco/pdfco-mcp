@@ -8,7 +8,8 @@ from pydantic import Field
 
 @mcp.tool()
 async def get_job_check(
-    job_id: str = Field(description="The ID of the job to get the status of")
+    job_id: str = Field(description="The ID of the job to get the status of"),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None)
 ) -> BaseResponse:
     """
     Check the status and results of a job
@@ -20,7 +21,7 @@ async def get_job_check(
     - unknown: unknown background job id. Available only when force is set to true for input request.
     """
     try:
-        async with PDFCoClient() as client:
+        async with PDFCoClient(api_key=api_key) as client:
             response = await client.post("/v1/job/check", json={
                 "jobId": job_id,
             })
@@ -42,7 +43,8 @@ async def get_job_check(
 async def wait_job_completion(
     job_id: str = Field(description="The ID of the job to get the status of"),
     interval: int = Field(description="The interval to check the status of the job (seconds)", default=1),
-    timeout: int = Field(description="The timeout to wait for the job to complete (seconds)", default=300)
+    timeout: int = Field(description="The timeout to wait for the job to complete (seconds)", default=300),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None)
 ) -> BaseResponse:
     """
     Wait for a job to complete
@@ -52,7 +54,7 @@ async def wait_job_completion(
     credits_used = 0
     credits_remaining = 0
     while True:
-        response = await get_job_check(job_id)
+        response = await get_job_check(job_id, api_key=api_key)
         job_check_count += 1
         credits_used += response.credits_used
         credits_remaining = response.credits_remaining

@@ -11,12 +11,13 @@ async def pdf_merge(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Merge PDF from two or more PDF, DOC, XLS, images, even ZIP with documents and images into a new PDF.
     Ref: https://developer.pdf.co/api-reference/merge/various-files.md
     """
-    return await merge_pdf(ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await merge_pdf(ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name), api_key=api_key)
 
 @mcp.tool()
 async def pdf_split(
@@ -26,6 +27,7 @@ async def pdf_split(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="Base file name for the generated output files. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Split a PDF into multiple PDF files using page indexes or page ranges.
@@ -40,4 +42,4 @@ async def pdf_split(
         name=name,
     )
     
-    return await split_pdf(params)
+    return await split_pdf(params, api_key=api_key)

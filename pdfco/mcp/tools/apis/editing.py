@@ -19,6 +19,7 @@ async def pdf_add_annotations_images_fields(
     expiration: int = Field(description="Set the expiration time for the output link in minutes. After this specified duration, any generated output file(s) will be automatically deleted. (Optional)", default=60),
     encrypt: bool = Field(description="Encrypt output file. (Optional)", default=False),
     flatten: bool = Field(description="Flatten filled form fields and annotations into PDF content. Set to true to disable editing of filled form fields in the output PDF. (Optional)", default=False),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Add text, images, forms, other PDFs, fill forms, links to external sites and external PDF files. You can update or modify PDF and scanned PDF files.
@@ -68,4 +69,4 @@ async def pdf_add_annotations_images_fields(
     if flatten:
         add_params["flatten"] = flatten
     
-    return await pdf_add(params, **add_params) 
+    return await pdf_add(params, **add_params, api_key=api_key) 
