@@ -20,11 +20,8 @@ async def PDFCoClient() -> AsyncGenerator[AsyncClient, None]:
         {
             "mcpServers": {
                 "pdfco": {
-                    "command": "uv",
+                    "command": "uvx",
                     "args": [
-                        "--directory",
-                        "/Users/outstandingboy/workspace/pdfco-mcp",
-                        "run",
                         "pdfco-mcp"
                     ],
                     "env": {
