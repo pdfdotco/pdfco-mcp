@@ -43,3 +43,14 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pdfco"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.13",
+]
+
+[tool.ruff.lint]
+ignore = [
+    'F401'
+]
