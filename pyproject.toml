@@ -1,14 +1,38 @@
 [project]
 name = "pdfco-mcp"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.0.4"
+description = "MCP server for PDF.Co"
+authors = [
+    { name = "PDF.Co", email = "support@pdf.co" }
+]
+license = { file = "LICENSE" }
+keywords = [
+    "mcp",
+    "pdf.co",
+    "pdf"
+]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "fastmcp>=2.6.1",
     "httpx>=0.28.1",
     "mcp[cli]>=1.6.0",
 ]
+
+[project.urls]
+Homepage = "https://pdf.co"
+Documentation = "https://developer.pdf.co"
+Repository = "https://github.com/ae38/pdfco-mcp"
+Issues = "https://github.com/ae38/pdfco-mcp/issues"
 
 [project.scripts]
 pdfco-mcp = "pdfco.mcp:main"
