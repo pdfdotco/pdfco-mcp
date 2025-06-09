@@ -1,4 +1,4 @@
-# PDF.co MCP Server
+# PDF.co MCP
 
 PDF.co MCP Server provides [PDF.co API](https://pdf.co) functionality through the Model Context Protocol (MCP), enabling AI assistants to easily perform various PDF processing tasks.
 
