@@ -6,10 +6,14 @@ from pdfco.mcp.models import BaseResponse
 
 from pydantic import Field
 
+
 @mcp.tool()
 async def get_job_check(
     job_id: str = Field(description="The ID of the job to get the status of"),
-    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None)
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default=None,
+    ),
 ) -> BaseResponse:
     """
     Check the status and results of a job
@@ -22,9 +26,12 @@ async def get_job_check(
     """
     try:
         async with PDFCoClient(api_key=api_key) as client:
-            response = await client.post("/v1/job/check", json={
-                "jobId": job_id,
-            })
+            response = await client.post(
+                "/v1/job/check",
+                json={
+                    "jobId": job_id,
+                },
+            )
             json_data = response.json()
             return BaseResponse(
                 status=json_data["status"],
@@ -39,12 +46,20 @@ async def get_job_check(
             content=str(e),
         )
 
+
 @mcp.tool()
 async def wait_job_completion(
     job_id: str = Field(description="The ID of the job to get the status of"),
-    interval: int = Field(description="The interval to check the status of the job (seconds)", default=1),
-    timeout: int = Field(description="The timeout to wait for the job to complete (seconds)", default=300),
-    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None)
+    interval: int = Field(
+        description="The interval to check the status of the job (seconds)", default=1
+    ),
+    timeout: int = Field(
+        description="The timeout to wait for the job to complete (seconds)", default=300
+    ),
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default=None,
+    ),
 ) -> BaseResponse:
     """
     Wait for a job to complete
