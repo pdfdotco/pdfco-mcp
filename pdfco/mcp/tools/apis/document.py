@@ -10,10 +10,11 @@ async def pdf_info_reader(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Get detailed information about a PDF document - number of pages, metadata, security, form fields, and more.
-    Ref: https://developer.pdf.co/api/pdf-info-reader/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-info-reader.md
     """
     params = ConversionParams(
         url=url,
@@ -22,4 +23,4 @@ async def pdf_info_reader(
         password=password,
     )
     
-    return await get_pdf_info(params) 
+    return await get_pdf_info(params, api_key=api_key) 

@@ -11,10 +11,11 @@ async def read_pdf_forms_info(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of PDF file. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Extracts information about fillable PDF fields from an input PDF file.
-    Ref: https://developer.pdf.co/api/pdf-forms-info-reader/index.html#post-pdf-info-fields
+    Ref: https://developer.pdf.co/api-reference/forms/info-reader.md
     """
     params = ConversionParams(
         url=url,
@@ -23,7 +24,7 @@ async def read_pdf_forms_info(
         password=password,
     )
     
-    return await get_pdf_form_fields_info(params)
+    return await get_pdf_form_fields_info(params, api_key=api_key)
 
 @mcp.tool(name="fill_forms")
 async def fill_pdf_forms(
@@ -32,6 +33,7 @@ async def fill_pdf_forms(
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Fill existing form fields in a PDF document.
@@ -47,7 +49,7 @@ async def fill_pdf_forms(
 
     Use 'read_pdf_forms_info' first to get the fieldName values of the form.
     
-    Ref: https://developer.pdf.co/api/pdf-filler/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-add#create-fillable-pdf-forms.md
     """
     params = ConversionParams(
         url=url,
@@ -56,7 +58,7 @@ async def fill_pdf_forms(
         name=name,
     )
     
-    return await fill_pdf_form_fields(params, fields=fields)
+    return await fill_pdf_form_fields(params, fields=fields, api_key=api_key)
 
 @mcp.tool(name="create_fillable_forms")
 async def create_fillable_forms(
@@ -65,6 +67,7 @@ async def create_fillable_forms(
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Create new fillable form elements in a PDF document.
@@ -90,7 +93,7 @@ async def create_fillable_forms(
         }
     ]
 
-    Ref: https://developer.pdf.co/api/pdf-filler/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-add#create-fillable-pdf-forms.md
     """
     params = ConversionParams(
         url=url,
@@ -99,4 +102,4 @@ async def create_fillable_forms(
         name=name,
     )
     
-    return await fill_pdf_form_fields(params, annotations=annotations) 
+    return await fill_pdf_form_fields(params, annotations=annotations, api_key=api_key) 

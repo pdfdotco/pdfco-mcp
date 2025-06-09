@@ -1,5 +1,5 @@
 from pdfco.mcp.server import mcp
-from pdfco.mcp.services.pdf import merge_pdf, split_pdf, optimize_pdf
+from pdfco.mcp.services.pdf import merge_pdf, split_pdf
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
@@ -11,12 +11,13 @@ async def pdf_merge(
     httpusername: str = Field(description="HTTP auth user name if required to access source url. (Optional)", default=""),
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Merge PDF from two or more PDF, DOC, XLS, images, even ZIP with documents and images into a new PDF.
-    Ref: https://developer.pdf.co/api/pdf-merge/index.html#post-tag-pdf-merge2
+    Ref: https://developer.pdf.co/api-reference/merge/various-files.md
     """
-    return await merge_pdf(ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name))
+    return await merge_pdf(ConversionParams(url=url, httpusername=httpusername, httppassword=httppassword, name=name), api_key=api_key)
 
 @mcp.tool()
 async def pdf_split(
@@ -26,10 +27,11 @@ async def pdf_split(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of the PDF file. (Optional)", default=""),
     name: str = Field(description="Base file name for the generated output files. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Split a PDF into multiple PDF files using page indexes or page ranges.
-    Ref: https://developer.pdf.co/api/pdf-split/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-split/by-pages.md
     """
     params = ConversionParams(
         url=url,
@@ -40,26 +42,4 @@ async def pdf_split(
         name=name,
     )
     
-    return await split_pdf(params)
-
-@mcp.tool()
-async def pdf_optimize(
-    url: str = Field(description="URL to the source PDF file. Supports publicly accessible links, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."),
-    httpusername: str = Field(description="HTTP auth user name if required to access source URL. (Optional)", default=""),
-    httppassword: str = Field(description="HTTP auth password if required to access source URL. (Optional)", default=""),
-    name: str = Field(description="File name for the generated output. (Optional)", default=""),
-    password: str = Field(description="Password of the input PDF file. (Optional)", default=""),
-) -> BaseResponse:
-    """
-    Optimize a PDF document to reduce its size.
-    Ref: https://developer.pdf.co/api/pdf-optimize/index.html
-    """
-    common_params = ConversionParams(
-        url=url,
-        httpusername=httpusername,
-        httppassword=httppassword,
-        name=name,
-        password=password
-    )
-        
-    return await optimize_pdf(common_params)
+    return await split_pdf(params, api_key=api_key)

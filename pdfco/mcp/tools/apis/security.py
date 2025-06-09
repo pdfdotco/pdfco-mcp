@@ -23,10 +23,11 @@ async def pdf_add_password(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of the PDF file if it's already password-protected. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Add password protection to a PDF file.
-    Ref: https://developer.pdf.co/api/password-and-security/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-password/add.md
     """
     params = ConversionParams(
         url=url,
@@ -70,7 +71,7 @@ async def pdf_add_password(
     if print_quality is not None:
         additional_params["PrintQuality"] = print_quality
     
-    return await add_pdf_password(params, **additional_params)
+    return await add_pdf_password(params, **additional_params, api_key=api_key)
 
 
 @mcp.tool()
@@ -80,10 +81,11 @@ async def pdf_remove_password(
     httppassword: str = Field(description="HTTP auth password if required to access source url. (Optional)", default=""),
     password: str = Field(description="Password of the PDF file to be removed. (Optional)", default=""),
     name: str = Field(description="File name for the generated output. (Optional)", default=""),
+    api_key: str = Field(description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)", default=None),
 ) -> BaseResponse:
     """
     Remove password protection from a PDF file.
-    Ref: https://developer.pdf.co/api/password-and-security/index.html
+    Ref: https://developer.pdf.co/api-reference/pdf-password/remove.md
     """
     params = ConversionParams(
         url=url,
@@ -93,4 +95,4 @@ async def pdf_remove_password(
         name=name,
     )
     
-    return await remove_pdf_password(params) 
+    return await remove_pdf_password(params, api_key=api_key) 
