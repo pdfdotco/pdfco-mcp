@@ -1,6 +1,6 @@
 [project]
 name = "pdfco-mcp"
-version = "0.0.4"
+version = "0.0.0"
 description = "MCP server for PDF.Co"
 authors = [
     { name = "PDF.Co", email = "support@pdf.co" }
