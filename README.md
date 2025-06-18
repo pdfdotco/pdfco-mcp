@@ -36,6 +36,26 @@ PDF.co MCP Server provides [PDF.co API](https://pdf.co) functionality through th
 1. Sign up at [PDF.co website](https://pdf.co)
 2. Get your API key from the dashboard
 
+### 📦 Install UV
+You need to install UV (a fast Python packaging tool) to use this MCP server:
+
+#### macOS and Linux
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+#### Windows
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+#### Alternative Installation Methods
+- **Homebrew**: `brew install uv`
+- **PyPI with pipx**: `pipx install uv`
+- **PyPI with pip**: `pip install uv`
+
+For more installation options and details, see the [UV installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+
 ### MCP Server Setup
 
 #### Cursor IDE Configuration
