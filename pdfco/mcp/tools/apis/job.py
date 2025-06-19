@@ -7,22 +7,9 @@ from pdfco.mcp.models import BaseResponse
 from pydantic import Field
 
 
-@mcp.tool()
-async def get_job_check(
-    job_id: str = Field(description="The ID of the job to get the status of"),
-    api_key: str = Field(
-        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default="",
-    ),
-) -> BaseResponse:
+async def _get_job_status(job_id: str, api_key: str = "") -> BaseResponse:
     """
-    Check the status and results of a job
-    Status can be:
-    - working: background job is currently in work or does not exist.
-    - success: background job was successfully finished.
-    - failed: background job failed for some reason (see message for more details).
-    - aborted: background job was aborted.
-    - unknown: unknown background job id. Available only when force is set to true for input request.
+    Internal helper function to check job status without MCP tool decoration
     """
     try:
         async with PDFCoClient(api_key=api_key) as client:
@@ -48,6 +35,26 @@ async def get_job_check(
 
 
 @mcp.tool()
+async def get_job_check(
+    job_id: str = Field(description="The ID of the job to get the status of"),
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default="",
+    ),
+) -> BaseResponse:
+    """
+    Check the status and results of a job
+    Status can be:
+    - working: background job is currently in work or does not exist.
+    - success: background job was successfully finished.
+    - failed: background job failed for some reason (see message for more details).
+    - aborted: background job was aborted.
+    - unknown: unknown background job id. Available only when force is set to true for input request.
+    """
+    return await _get_job_status(job_id, api_key)
+
+
+@mcp.tool()
 async def wait_job_completion(
     job_id: str = Field(description="The ID of the job to get the status of"),
     interval: int = Field(
@@ -69,10 +76,10 @@ async def wait_job_completion(
     credits_used = 0
     credits_remaining = 0
     while True:
-        response = await get_job_check(job_id, api_key=api_key)
+        response = await _get_job_status(job_id, api_key=api_key)
         job_check_count += 1
-        credits_used += response.credits_used
-        credits_remaining = response.credits_remaining
+        credits_used += response.credits_used or 0
+        credits_remaining = response.credits_remaining or 0
         if response.status == "success":
             return BaseResponse(
                 status="success",
@@ -84,7 +91,7 @@ async def wait_job_completion(
         elif response.status == "failed":
             return BaseResponse(
                 status="error",
-                content=response.message,
+                content=response.content,
                 credits_used=credits_used,
                 credits_remaining=credits_remaining,
             )
