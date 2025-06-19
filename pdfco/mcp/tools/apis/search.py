@@ -38,7 +38,7 @@ async def find_text(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """
@@ -80,7 +80,7 @@ async def find_table(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """

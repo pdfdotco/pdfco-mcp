@@ -10,7 +10,7 @@ async def upload_file(
     file_path: str = Field(description="The absolute path to the file to upload"),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """

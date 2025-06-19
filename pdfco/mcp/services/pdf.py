@@ -4,36 +4,36 @@ from pdfco.mcp.services.client import PDFCoClient
 
 
 async def convert_to(
-    _from: str, _to: str, params: ConversionParams, api_key: str = None
+    _from: str, _to: str, params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request(f"{_from}/convert/to/{_to}", params, api_key=api_key)
 
 
 async def convert_from(
-    _to: str, _from: str, params: ConversionParams, api_key: str = None
+    _to: str, _from: str, params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request(f"{_to}/convert/from/{_from}", params, api_key=api_key)
 
 
-async def merge_pdf(params: ConversionParams, api_key: str = None) -> BaseResponse:
+async def merge_pdf(params: ConversionParams, api_key: str | None = None) -> BaseResponse:
     return await request("pdf/merge2", params, api_key=api_key)
 
 
-async def split_pdf(params: ConversionParams, api_key: str = None) -> BaseResponse:
+async def split_pdf(params: ConversionParams, api_key: str | None = None) -> BaseResponse:
     return await request("pdf/split", params, api_key=api_key)
 
 
 async def get_pdf_form_fields_info(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/info/fields", params, api_key=api_key)
 
 
 async def fill_pdf_form_fields(
     params: ConversionParams,
-    fields: list = None,
-    annotations: list = None,
-    api_key: str = None,
+    fields: list | None = None,
+    annotations: list | None = None,
+    api_key: str | None = None,
 ) -> BaseResponse:
     custom_payload = {}
     if fields:
@@ -46,7 +46,7 @@ async def fill_pdf_form_fields(
 
 
 async def pdf_add(
-    params: ConversionParams, api_key: str = None, **kwargs
+    params: ConversionParams, api_key: str | None = None, **kwargs
 ) -> BaseResponse:
     """General PDF Add function that supports all PDF Add API parameters"""
     custom_payload = {}
@@ -65,8 +65,8 @@ async def find_text_in_pdf(
     params: ConversionParams,
     search_string: str,
     regex_search: bool = False,
-    word_matching_mode: str = None,
-    api_key: str = None,
+    word_matching_mode: str | None = None,
+    api_key: str | None = None,
 ) -> BaseResponse:
     custom_payload = {"searchString": search_string, "regexSearch": regex_search}
     if word_matching_mode:
@@ -77,29 +77,29 @@ async def find_text_in_pdf(
 
 
 async def find_table_in_pdf(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/find/table", params, api_key=api_key)
 
 
 async def make_pdf_searchable(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/makesearchable", params, api_key=api_key)
 
 
 async def make_pdf_unsearchable(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/makeunsearchable", params, api_key=api_key)
 
 
-async def get_pdf_info(params: ConversionParams, api_key: str = None) -> BaseResponse:
+async def get_pdf_info(params: ConversionParams, api_key: str | None = None) -> BaseResponse:
     return await request("pdf/info", params, api_key=api_key)
 
 
 async def add_pdf_password(
-    params: ConversionParams, api_key: str = None, **kwargs
+    params: ConversionParams, api_key: str | None = None, **kwargs
 ) -> BaseResponse:
     return await request(
         "pdf/security/add", params, custom_payload=kwargs, api_key=api_key
@@ -107,17 +107,17 @@ async def add_pdf_password(
 
 
 async def remove_pdf_password(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/security/remove", params, api_key=api_key)
 
 
-async def parse_invoice(params: ConversionParams, api_key: str = None) -> BaseResponse:
+async def parse_invoice(params: ConversionParams, api_key: str | None = None) -> BaseResponse:
     return await request("ai-invoice-parser", params, api_key=api_key)
 
 
 async def extract_pdf_attachments(
-    params: ConversionParams, api_key: str = None
+    params: ConversionParams, api_key: str | None = None
 ) -> BaseResponse:
     return await request("pdf/attachments/extract", params, api_key=api_key)
 
@@ -125,8 +125,8 @@ async def extract_pdf_attachments(
 async def request(
     endpoint: str,
     params: ConversionParams,
-    custom_payload: dict = None,
-    api_key: str = None,
+    custom_payload: dict | None = None,
+    api_key: str | None = None,
 ) -> BaseResponse:
     payload = params.parse_payload(async_mode=True)
     if custom_payload:

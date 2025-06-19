@@ -12,7 +12,7 @@ async def get_job_check(
     job_id: str = Field(description="The ID of the job to get the status of"),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """
@@ -58,7 +58,7 @@ async def wait_job_completion(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """

@@ -23,7 +23,7 @@ async def pdf_merge(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """
@@ -63,7 +63,7 @@ async def pdf_split(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """

@@ -34,7 +34,7 @@ async def pdf_make_searchable(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """
@@ -80,7 +80,7 @@ async def pdf_make_unsearchable(
     ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
-        default=None,
+        default="",
     ),
 ) -> BaseResponse:
     """

@@ -13,7 +13,7 @@ print(f"pdfco-mcp version: {__version__}", file=sys.stderr)
 
 
 @asynccontextmanager
-async def PDFCoClient(api_key: str = None) -> AsyncGenerator[AsyncClient, None]:
+async def PDFCoClient(api_key: str | None = None) -> AsyncGenerator[AsyncClient, None]:
     # Use provided API key, fall back to environment variable
     x_api_key = api_key or X_API_KEY
 
