@@ -193,7 +193,7 @@ Add password protection to this PDF file
 ## 📞 Support & Contact
 
 - **PDF.co**: https://pdf.co
-- **PDF.co API Documentation**: https://developer.pdf.co
+- **PDF.co API Documentation**: https://docs.pdf.co
 - **Issue Reports**: Please report issues through GitHub Issues
 
 ## 📄 License
