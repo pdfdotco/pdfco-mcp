@@ -26,7 +26,7 @@ async def read_pdf_forms_info(
 ) -> BaseResponse:
     """
     Extracts information about fillable PDF fields from an input PDF file.
-    Ref: https://developer.pdf.co/api-reference/forms/info-reader.md
+    Ref: https://docs.pdf.co/api-reference/forms/info-reader.md
     """
     params = ConversionParams(
         url=url,
@@ -76,7 +76,7 @@ async def fill_pdf_forms(
 
     Use 'read_pdf_forms_info' first to get the fieldName values of the form.
 
-    Ref: https://developer.pdf.co/api-reference/pdf-add#create-fillable-pdf-forms.md
+    Ref: https://docs.pdf.co/api-reference/pdf-add.md
     """
     params = ConversionParams(
         url=url,
@@ -136,7 +136,7 @@ async def create_fillable_forms(
         }
     ]
 
-    Ref: https://developer.pdf.co/api-reference/pdf-add#create-fillable-pdf-forms.md
+    Ref: https://docs.pdf.co/api-reference/pdf-add.md
     """
     params = ConversionParams(
         url=url,

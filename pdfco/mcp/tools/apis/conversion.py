@@ -51,7 +51,7 @@ async def pdf_to_json(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved using the /pdf/convert/to/json2 endpoint.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-json/basic.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-json/basic.md
     """
     return await convert_to(
         "pdf",
@@ -118,7 +118,7 @@ async def pdf_to_csv(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images into CSV representation with layout, columns, rows, and tables.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-csv.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-csv.md
     """
     return await convert_to(
         "pdf",
@@ -185,7 +185,7 @@ async def pdf_to_text(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to text with layout preserved.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-text/basic.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-text/basic.md
     """
     return await convert_to(
         "pdf",
@@ -252,7 +252,7 @@ async def pdf_to_xls(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLS (Excel 97-2003) format.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xls.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-excel/xls.md
     """
     return await convert_to(
         "pdf",
@@ -319,7 +319,7 @@ async def pdf_to_xlsx(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XLSX (Excel 2007+) format.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-excel/xlsx.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-excel/xlsx.md
     """
     return await convert_to(
         "pdf",
@@ -386,7 +386,7 @@ async def pdf_to_xml(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to XML format.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-xml.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-xml.md
     """
     return await convert_to(
         "pdf",
@@ -453,7 +453,7 @@ async def pdf_to_html(
 ) -> BaseResponse:
     """
     Convert PDF and scanned images to HTML format.
-    Ref: https://developer.pdf.co/api-reference/pdf-to-html.md
+    Ref: https://docs.pdf.co/api-reference/pdf-to-html.md
     """
     return await convert_to(
         "pdf",
@@ -526,10 +526,10 @@ async def pdf_to_image(
     """
     Convert PDF and scanned images to various image formats (JPG, PNG, WebP, TIFF).
     Ref:
-     - https://developer.pdf.co/api-reference/pdf-to-image/jpg.md
-     - https://developer.pdf.co/api-reference/pdf-to-image/png.md
-     - https://developer.pdf.co/api-reference/pdf-to-image/webp.md
-     - https://developer.pdf.co/api-reference/pdf-to-image/tiff.md
+     - https://docs.pdf.co/api-reference/pdf-to-image/jpg.md
+     - https://docs.pdf.co/api-reference/pdf-to-image/png.md
+     - https://docs.pdf.co/api-reference/pdf-to-image/webp.md
+     - https://docs.pdf.co/api-reference/pdf-to-image/tiff.md
     """
     return await convert_to(
         "pdf",
@@ -581,7 +581,7 @@ async def document_to_pdf(
 ) -> BaseResponse:
     """
     Convert various document types (DOC, DOCX, RTF, TXT, XLS, XLSX, CSV, HTML, JPG, PNG, TIFF, WEBP) into PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-document/doc.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-document/doc.md
     """
     return await convert_from(
         "pdf",
@@ -629,7 +629,7 @@ async def csv_to_pdf(
 ) -> BaseResponse:
     """
     Convert CSV or spreadsheet files (XLS, XLSX) to PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-document/csv.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-document/csv.md
     """
     return await convert_from(
         "pdf",
@@ -673,7 +673,7 @@ async def image_to_pdf(
 ) -> BaseResponse:
     """
     Convert various image formats (JPG, PNG, TIFF) to PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-image.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-image.md
     ```
     """
     return await convert_from(
@@ -743,7 +743,7 @@ async def webpage_to_pdf(
 ) -> BaseResponse:
     """
     Convert external webpage URL to PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-url.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-url.md
 
     The header and footer parameters can contain valid HTML markup with the following classes used to inject printing values into them:
     - date: formatted print date
@@ -832,7 +832,7 @@ async def html_to_pdf(
 ) -> BaseResponse:
     """
     Convert HTML to PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-html/convert.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-html/convert.md
 
     The header and footer parameters can contain valid HTML markup with the following classes used to inject printing values into them:
     - date: formatted print date
@@ -898,7 +898,7 @@ async def email_to_pdf(
 ) -> BaseResponse:
     """
     Convert email to PDF.
-    Ref: https://developer.pdf.co/api-reference/pdf-from-email.md
+    Ref: https://docs.pdf.co/api-reference/pdf-from-email.md
     """
     return await convert_from(
         "pdf",
@@ -941,7 +941,7 @@ async def excel_to_csv(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to CSV.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/csv.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/csv.md
     """
     return await convert_to(
         "xls",
@@ -983,7 +983,7 @@ async def excel_to_json(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to JSON.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/json.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/json.md
     """
     return await convert_to(
         "xls",
@@ -1025,7 +1025,7 @@ async def excel_to_html(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to HTML.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/html.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/html.md
     """
     return await convert_to(
         "xls",
@@ -1067,7 +1067,7 @@ async def excel_to_txt(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to TXT.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/text.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/text.md
     """
     return await convert_to(
         "xls",
@@ -1109,7 +1109,7 @@ async def excel_to_xml(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to XML.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/xml.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/xml.md
     """
     return await convert_to(
         "xls",
@@ -1151,7 +1151,7 @@ async def excel_to_pdf(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to PDF.
-    Ref: https://developer.pdf.co/api-reference/convert-from-excel/pdf.md
+    Ref: https://docs.pdf.co/api-reference/convert-from-excel/pdf.md
     """
     return await convert_to(
         "xls",

@@ -43,7 +43,7 @@ async def find_text(
 ) -> BaseResponse:
     """
     Find text in PDF and get coordinates. Supports regular expressions.
-    Ref: https://developer.pdf.co/api-reference/pdf-find/basic.md
+    Ref: https://docs.pdf.co/api-reference/pdf-find/basic.md
     """
     params = ConversionParams(
         url=url,
@@ -85,7 +85,7 @@ async def find_table(
 ) -> BaseResponse:
     """
     Find tables in PDF and get their coordinates.
-    Ref: https://developer.pdf.co/api-reference/pdf-find/table.md
+    Ref: https://docs.pdf.co/api-reference/pdf-find/table.md
     """
     params = ConversionParams(
         url=url,

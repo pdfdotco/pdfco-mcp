@@ -30,7 +30,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://pdf.co"
-Documentation = "https://developer.pdf.co"
+Documentation = "https://docs.pdf.co"
 Repository = "https://github.com/pdfdotco/pdfco-mcp"
 Issues = "https://github.com/pdfdotco/pdfco-mcp/issues"
 
