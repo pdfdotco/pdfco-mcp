@@ -40,7 +40,7 @@ async def pdf_make_searchable(
     """
     Convert scanned PDF documents or image files into a text-searchable PDF.
     Runs OCR and adds an invisible text layer that can be used for text search.
-    Ref: https://developer.pdf.co/api-reference/pdf-change-text-searchable/searchable.md
+    Ref: https://docs.pdf.co/api-reference/pdf-change-text-searchable/searchable.md
     """
     params = ConversionParams(
         url=url,
@@ -85,7 +85,7 @@ async def pdf_make_unsearchable(
 ) -> BaseResponse:
     """
     Make existing PDF document non-searchable by removing the text layer from it.
-    Ref: https://developer.pdf.co/api-reference/pdf-change-text-searchable/unsearchable.md
+    Ref: https://docs.pdf.co/api-reference/pdf-change-text-searchable/unsearchable.md
     """
     params = ConversionParams(
         url=url,
