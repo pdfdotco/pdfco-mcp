@@ -74,7 +74,7 @@ async def pdf_add_annotations_images_fields(
     Example fields:
     [{"fieldName": "topmostSubform[0].Page1[0].YourSocial_ReadOrderControl[0].f1_05[0]", "pages": "1", "text": "Joan B.", "fontName": "Arial", "size": 6, "fontBold": true, "fontItalic": true, "fontStrikeout": true, "fontUnderline": true}]
 
-    Ref: https://docs.pdf.co/api-reference/pdf-add.md
+    Ref: https://developer.pdf.co/api/pdf-add.md
     """
     params = ConversionParams(
         url=url,

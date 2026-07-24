@@ -28,7 +28,7 @@ async def pdf_info_reader(
 ) -> BaseResponse:
     """
     Get detailed information about a PDF document - number of pages, metadata, security, form fields, and more.
-    Ref: https://docs.pdf.co/api-reference/pdf-info-reader.md
+    Ref: https://developer.pdf.co/api/pdf-info-reader.md
     """
     params = ConversionParams(
         url=url,
