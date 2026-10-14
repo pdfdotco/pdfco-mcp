@@ -66,7 +66,9 @@ async def call():
     async with Client(mcp) as client:
 
         async def _call(tool_name: str, **arguments) -> BaseResponse:
-            contents = await client.call_tool(tool_name, arguments)
+            result = await client.call_tool(tool_name, arguments)
+            # fastmcp < 3 returns a list of content blocks; fastmcp >= 3 wraps it.
+            contents = getattr(result, "content", result)
             return BaseResponse.model_validate_json(contents[0].text)
 
         _call.client = client
