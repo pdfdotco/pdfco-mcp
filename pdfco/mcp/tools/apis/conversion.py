@@ -44,6 +44,14 @@ async def pdf_to_json(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -57,6 +65,8 @@ async def pdf_to_json(
         "pdf",
         "json2",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -111,6 +121,14 @@ async def pdf_to_csv(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -124,6 +142,8 @@ async def pdf_to_csv(
         "pdf",
         "csv",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -178,6 +198,14 @@ async def pdf_to_text(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -191,6 +219,8 @@ async def pdf_to_text(
         "pdf",
         "text",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -245,6 +275,14 @@ async def pdf_to_xls(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -258,6 +296,8 @@ async def pdf_to_xls(
         "pdf",
         "xls",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -312,6 +352,14 @@ async def pdf_to_xlsx(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -325,6 +373,8 @@ async def pdf_to_xlsx(
         "pdf",
         "xlsx",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -379,6 +429,14 @@ async def pdf_to_xml(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -392,6 +450,8 @@ async def pdf_to_xml(
         "pdf",
         "xml",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -446,6 +506,14 @@ async def pdf_to_html(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -459,6 +527,8 @@ async def pdf_to_html(
         "pdf",
         "html",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -518,6 +588,14 @@ async def pdf_to_image(
         default="jpg",
         choices=["jpg", "png", "webp", "tiff"],
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -535,6 +613,8 @@ async def pdf_to_image(
         "pdf",
         type,
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -574,6 +654,14 @@ async def document_to_pdf(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -587,6 +675,8 @@ async def document_to_pdf(
         "pdf",
         "doc",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             autosize=autosize,
             httpusername=httpusername,
@@ -622,6 +712,14 @@ async def csv_to_pdf(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -635,6 +733,8 @@ async def csv_to_pdf(
         "pdf",
         "csv",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             autosize=autosize,
             httpusername=httpusername,
@@ -666,6 +766,14 @@ async def image_to_pdf(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -680,6 +788,8 @@ async def image_to_pdf(
         "pdf",
         "image",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -736,6 +846,14 @@ async def webpage_to_pdf(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -760,6 +878,8 @@ async def webpage_to_pdf(
         "pdf",
         "url",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             margins=margins,
             paperSize=paperSize,
@@ -825,6 +945,14 @@ async def html_to_pdf(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -849,6 +977,8 @@ async def html_to_pdf(
         "pdf",
         "html",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             html=html,
             margins=margins,
             paperSize=paperSize,
@@ -891,6 +1021,14 @@ async def email_to_pdf(
         description="Set to Portrait or Landscape. Portrait is set by default. (Optional)",
         default="",
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -904,6 +1042,8 @@ async def email_to_pdf(
         "pdf",
         "email",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             embedAttachments=embedAttachments,
             convertAttachments=convertAttachments,
@@ -934,6 +1074,14 @@ async def excel_to_csv(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -947,6 +1095,8 @@ async def excel_to_csv(
         "xls",
         "csv",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -976,6 +1126,14 @@ async def excel_to_json(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -989,6 +1147,8 @@ async def excel_to_json(
         "xls",
         "json",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -1018,6 +1178,14 @@ async def excel_to_html(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -1031,6 +1199,8 @@ async def excel_to_html(
         "xls",
         "html",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -1060,6 +1230,14 @@ async def excel_to_txt(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -1073,6 +1251,8 @@ async def excel_to_txt(
         "xls",
         "txt",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -1102,6 +1282,14 @@ async def excel_to_xml(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -1115,6 +1303,8 @@ async def excel_to_xml(
         "xls",
         "xml",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,
@@ -1144,6 +1334,14 @@ async def excel_to_pdf(
     worksheetIndex: str = Field(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -1157,6 +1355,8 @@ async def excel_to_pdf(
         "xls",
         "pdf",
         ConversionParams(
+            profiles=profiles,
+            expiration=expiration,
             url=url,
             httpusername=httpusername,
             httppassword=httppassword,

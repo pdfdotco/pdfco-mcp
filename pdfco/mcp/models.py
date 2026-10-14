@@ -103,6 +103,10 @@ class ConversionParams(BaseModel):
         default="",
     )
 
+    profiles: str = Field(
+        description="JSON string with extra engine options for the endpoint. (Optional)",
+        default="",
+    )
     expiration: int | None = Field(
         description="Expiration time for the output link in minutes. Output files are deleted after this period. (Optional, API default: 60)",
         default=None,
