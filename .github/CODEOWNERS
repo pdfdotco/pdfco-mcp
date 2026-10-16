@@ -1,0 +1,4 @@
+# Every pull request requests a review from the PDF.co engineering team.
+# One approval from a code owner is required to merge (branch ruleset "main").
+
+* @pdfdotco/pdfco-engineer
