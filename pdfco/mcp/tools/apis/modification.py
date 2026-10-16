@@ -21,6 +21,14 @@ async def pdf_merge(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -32,7 +40,12 @@ async def pdf_merge(
     """
     return await merge_pdf(
         ConversionParams(
-            url=url, httpusername=httpusername, httppassword=httppassword, name=name
+            profiles=profiles,
+            expiration=expiration,
+            url=url,
+            httpusername=httpusername,
+            httppassword=httppassword,
+            name=name,
         ),
         api_key=api_key,
     )
@@ -61,6 +74,14 @@ async def pdf_split(
         description="Base file name for the generated output files. (Optional)",
         default="",
     ),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -71,6 +92,8 @@ async def pdf_split(
     Ref: https://developer.pdf.co/api/pdf-split/by-pages.md
     """
     params = ConversionParams(
+        profiles=profiles,
+        expiration=expiration,
         url=url,
         pages=pages,
         httpusername=httpusername,

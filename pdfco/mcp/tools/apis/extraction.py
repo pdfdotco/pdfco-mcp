@@ -20,7 +20,6 @@ async def ai_invoice_parser(
     Ref: https://developer.pdf.co/api/ai-invoice-parser.md
     """
 
-    # Pass arguments directly; ConversionParams now handles str with default=None
     params = ConversionParams(
         url=url,
     )
@@ -40,6 +39,14 @@ async def extract_attachments(
         default="",
     ),
     password: str = Field(description="Password of PDF file. (Optional)", default=""),
+    profiles: str = Field(
+        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -50,9 +57,11 @@ async def extract_attachments(
     Ref: https://developer.pdf.co/api/pdf-extract-attachments.md
     """
     params = ConversionParams(
+        profiles=profiles,
+        expiration=expiration,
         url=url,
-        httpusername=httpusername if httpusername else None,
-        httppassword=httppassword if httppassword else None,
-        password=password if password else None,
+        httpusername=httpusername,
+        httppassword=httppassword,
+        password=password,
     )
     return await extract_pdf_attachments(params, api_key=api_key)
