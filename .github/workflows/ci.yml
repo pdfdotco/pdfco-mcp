@@ -28,3 +28,19 @@ jobs:
 
       - name: Test
         run: uv run pytest
+
+  # Users install with `uvx pdfco-mcp`, which resolves the newest versions the
+  # package allows, not the versions in uv.lock. Run the suite against that
+  # resolution too, so a breaking fastmcp or pydantic release shows up here first.
+  test-latest-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: 0.9.10
+
+      - name: Test against the newest resolvable dependencies
+        run: uv run --isolated --no-project --with . --with pytest --with pytest-asyncio pytest -p no:cacheprovider
