@@ -20,6 +20,12 @@ async def _get_job_status(job_id: str, api_key: str = "") -> BaseResponse:
                 },
             )
             json_data = response.json()
+            if response.status_code >= 400 or json_data.get("error") is True:
+                return BaseResponse(
+                    status="error",
+                    content=json_data,
+                    tips=json_data.get("message"),
+                )
             return BaseResponse(
                 status=json_data["status"],
                 content=json_data,
@@ -88,12 +94,13 @@ async def wait_job_completion(
                 credits_remaining=credits_remaining,
                 tips=f"Job check count: {job_check_count}",
             )
-        elif response.status == "failed":
+        elif response.status in ("failed", "aborted", "unknown", "error"):
             return BaseResponse(
                 status="error",
                 content=response.content,
                 credits_used=credits_used,
                 credits_remaining=credits_remaining,
+                tips=f"Job status: {response.status}. Job check count: {job_check_count}",
             )
         await asyncio.sleep(interval)
         if time.time() - start_time > timeout:

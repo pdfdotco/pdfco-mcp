@@ -134,8 +134,8 @@ async def pdf_to_csv(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -201,8 +201,8 @@ async def pdf_to_text(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -268,8 +268,8 @@ async def pdf_to_xls(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -335,8 +335,8 @@ async def pdf_to_xlsx(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -402,8 +402,8 @@ async def pdf_to_xml(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -469,8 +469,8 @@ async def pdf_to_html(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -545,8 +545,8 @@ async def pdf_to_image(
             line_grouping=line_grouping,
             password=password,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -593,8 +593,8 @@ async def document_to_pdf(
             httppassword=httppassword,
             pages=pages,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -641,8 +641,8 @@ async def csv_to_pdf(
             httppassword=httppassword,
             pages=pages,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -685,8 +685,8 @@ async def image_to_pdf(
             httppassword=httppassword,
             pages=pages,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -772,8 +772,8 @@ async def webpage_to_pdf(
             httpusername=httpusername,
             httppassword=httppassword,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -861,8 +861,8 @@ async def html_to_pdf(
             httpusername=httpusername,
             httppassword=httppassword,
             name=name,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -910,8 +910,8 @@ async def email_to_pdf(
             margins=margins,
             paperSize=paperSize,
             orientation=orientation,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -952,8 +952,8 @@ async def excel_to_csv(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -994,8 +994,8 @@ async def excel_to_json(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -1036,8 +1036,8 @@ async def excel_to_html(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -1078,8 +1078,8 @@ async def excel_to_txt(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -1120,8 +1120,8 @@ async def excel_to_xml(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
 
 
@@ -1162,6 +1162,6 @@ async def excel_to_pdf(
             httppassword=httppassword,
             name=name,
             worksheetIndex=worksheetIndex,
-            api_key=api_key,
         ),
+        api_key=api_key,
     )
