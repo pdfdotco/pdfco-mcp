@@ -32,6 +32,14 @@ async def pdf_make_searchable(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -43,6 +51,8 @@ async def pdf_make_searchable(
     Ref: https://developer.pdf.co/api/pdf-change-text-searchable/searchable.md
     """
     params = ConversionParams(
+        profiles=profiles,
+        expiration=expiration,
         url=url,
         httpusername=httpusername,
         httppassword=httppassword,
@@ -78,6 +88,14 @@ async def pdf_make_unsearchable(
     name: str = Field(
         description="File name for the generated output. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -88,6 +106,8 @@ async def pdf_make_unsearchable(
     Ref: https://developer.pdf.co/api/pdf-change-text-searchable/unsearchable.md
     """
     params = ConversionParams(
+        profiles=profiles,
+        expiration=expiration,
         url=url,
         httpusername=httpusername,
         httppassword=httppassword,

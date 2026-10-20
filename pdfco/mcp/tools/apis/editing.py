@@ -46,6 +46,10 @@ async def pdf_add_annotations_images_fields(
         description="Flatten filled form fields and annotations into PDF content. Set to true to disable editing of filled form fields in the output PDF. (Optional)",
         default=False,
     ),
+    profiles: str = Field(
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
+        default="",
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -77,6 +81,7 @@ async def pdf_add_annotations_images_fields(
     Ref: https://developer.pdf.co/api/pdf-add.md
     """
     params = ConversionParams(
+        profiles=profiles,
         url=url,
         httpusername=httpusername,
         httppassword=httppassword,

@@ -21,6 +21,14 @@ async def pdf_info_reader(
     password: str = Field(
         description="Password of the PDF file. (Optional)", default=""
     ),
+    profiles: str = Field(
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes; the output file is deleted afterwards. API default is 60; the maximum depends on the plan. (Optional)",
+        default=None,
+    ),
     api_key: str = Field(
         description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
         default="",
@@ -31,6 +39,8 @@ async def pdf_info_reader(
     Ref: https://developer.pdf.co/api/pdf-info-reader.md
     """
     params = ConversionParams(
+        profiles=profiles,
+        expiration=expiration,
         url=url,
         httpusername=httpusername,
         httppassword=httppassword,

@@ -4,31 +4,66 @@ import pytest
 from pydantic import ValidationError
 
 from pdfco.mcp.models import ConversionParams
-from pdfco.mcp.tools.apis import conversion
 
-CONVERSION_TOOL_NAMES = sorted(
-    name
-    for name, obj in vars(conversion).items()
-    if callable(obj) and getattr(obj, "__module__", None) == conversion.__name__
-)
-
-
-def test_conversion_tool_inventory():
-    assert len(CONVERSION_TOOL_NAMES) == 20
+# Tools whose endpoints take neither `profiles` nor `expiration`.
+NON_API_TOOLS = {
+    "ai_invoice_parser",
+    "upload_file",
+    "get_job_check",
+    "wait_job_completion",
+}
+EXPECTED_TOOL_COUNT = 38
 
 
-@pytest.mark.parametrize("tool_name", CONVERSION_TOOL_NAMES)
-async def test_call_level_api_key_is_sent(api, call, tool_name):
-    tool = next(t for t in await call.client.list_tools() if t.name == tool_name)
-    arguments = {
-        name: "https://example.com/input.pdf"
-        for name in tool.inputSchema.get("required", [])
-    }
+def dummy_for(schema: dict):
+    """A value of the right JSON type for a required parameter."""
+    kind = schema.get("type")
+    if isinstance(kind, list):
+        kind = next(k for k in kind if k != "null")
+    if kind == "array":
+        return [{"text": "x"}]
+    if kind == "integer":
+        return 1
+    if kind == "number":
+        return 1.0
+    if kind == "boolean":
+        return True
+    if kind == "object":
+        return {}
+    return "https://example.com/input.pdf"
 
-    result = await call(tool_name, **arguments, api_key="k-test")
 
-    assert result.status == "working", result
-    assert api.last.headers["x-api-key"] == "k-test"
+async def api_tools(client):
+    tools = await client.list_tools()
+    assert len(tools) == EXPECTED_TOOL_COUNT
+    return [t for t in tools if t.name not in NON_API_TOOLS]
+
+
+async def test_api_tool_inventory(call):
+    assert len(await api_tools(call.client)) == EXPECTED_TOOL_COUNT - len(NON_API_TOOLS)
+
+
+async def test_shared_inputs_reach_every_api_tool(api, call):
+    for tool in await api_tools(call.client):
+        props = tool.inputSchema.get("properties", {})
+        required = {
+            name: dummy_for(props[name])
+            for name in tool.inputSchema.get("required", [])
+        }
+
+        result = await call(
+            tool.name,
+            **required,
+            api_key="k-test",
+            profiles='{"TrimSpaces": true}',
+            expiration=5,
+        )
+
+        assert result.status == "working", (tool.name, result)
+        assert api.last.headers["x-api-key"] == "k-test", tool.name
+        payload = api.last_payload
+        assert payload["profiles"] == '{"TrimSpaces": true}', tool.name
+        assert payload["expiration"] == 5, tool.name
 
 
 async def test_false_booleans_are_sent(api, call):
