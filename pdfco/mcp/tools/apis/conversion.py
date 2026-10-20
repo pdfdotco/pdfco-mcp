@@ -45,7 +45,7 @@ async def pdf_to_json(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -122,7 +122,7 @@ async def pdf_to_csv(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -199,7 +199,7 @@ async def pdf_to_text(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -276,7 +276,7 @@ async def pdf_to_xls(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -353,7 +353,7 @@ async def pdf_to_xlsx(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -430,7 +430,7 @@ async def pdf_to_xml(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -507,7 +507,7 @@ async def pdf_to_html(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -589,7 +589,7 @@ async def pdf_to_image(
         choices=["jpg", "png", "webp", "tiff"],
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -655,7 +655,7 @@ async def document_to_pdf(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -713,7 +713,7 @@ async def csv_to_pdf(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -767,7 +767,7 @@ async def image_to_pdf(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -847,7 +847,7 @@ async def webpage_to_pdf(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -946,7 +946,7 @@ async def html_to_pdf(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1022,7 +1022,7 @@ async def email_to_pdf(
         default="",
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1075,7 +1075,7 @@ async def excel_to_csv(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1127,7 +1127,7 @@ async def excel_to_json(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1179,7 +1179,7 @@ async def excel_to_html(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1231,7 +1231,7 @@ async def excel_to_txt(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1283,7 +1283,7 @@ async def excel_to_xml(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -1335,7 +1335,7 @@ async def excel_to_pdf(
         description="Index of the worksheet to convert. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(

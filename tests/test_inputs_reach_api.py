@@ -55,14 +55,14 @@ async def test_shared_inputs_reach_every_api_tool(api, call):
             tool.name,
             **required,
             api_key="k-test",
-            profiles='{"CheckPermissions": false}',
+            profiles='{"TrimSpaces": true}',
             expiration=5,
         )
 
         assert result.status == "working", (tool.name, result)
         assert api.last.headers["x-api-key"] == "k-test", tool.name
         payload = api.last_payload
-        assert payload["profiles"] == '{"CheckPermissions": false}', tool.name
+        assert payload["profiles"] == '{"TrimSpaces": true}', tool.name
         assert payload["expiration"] == 5, tool.name
 
 

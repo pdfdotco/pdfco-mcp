@@ -66,7 +66,7 @@ async def pdf_add_password(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
@@ -149,7 +149,7 @@ async def pdf_remove_password(
         description="File name for the generated output. (Optional)", default=""
     ),
     profiles: str = Field(
-        description="JSON string with extra engine options for this endpoint, e.g. '{\"CheckPermissions\": false}'. See https://developer.pdf.co/api/profiles for the options each endpoint supports. (Optional)",
+        description="Extra engine options for this endpoint as a JSON object encoded in a string. The options differ per endpoint; see https://developer.pdf.co/api/profiles. (Optional)",
         default="",
     ),
     expiration: int | None = Field(
