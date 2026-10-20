@@ -15,6 +15,11 @@ NON_API_TOOLS = {
 EXPECTED_TOOL_COUNT = 38
 
 
+def input_schema(tool) -> dict:
+    """MCP SDK v2 renamed `inputSchema` to `input_schema`; accept both."""
+    return getattr(tool, "input_schema", None) or tool.inputSchema
+
+
 def dummy_for(schema: dict):
     """A value of the right JSON type for a required parameter."""
     kind = schema.get("type")
@@ -45,10 +50,10 @@ async def test_api_tool_inventory(call):
 
 async def test_shared_inputs_reach_every_api_tool(api, call):
     for tool in await api_tools(call.client):
-        props = tool.inputSchema.get("properties", {})
+        props = input_schema(tool).get("properties", {})
         required = {
             name: dummy_for(props[name])
-            for name in tool.inputSchema.get("required", [])
+            for name in input_schema(tool).get("required", [])
         }
 
         result = await call(
