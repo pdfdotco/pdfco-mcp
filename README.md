@@ -1,5 +1,7 @@
 # PDF.co MCP
 
+<!-- mcp-name: io.github.pdfdotco/pdfco-mcp -->
+
 PDF.co MCP Server provides [PDF.co API](https://pdf.co) functionality through the Model Context Protocol (MCP), enabling AI assistants to easily perform various PDF processing tasks.
 
 ## 🚀 Key Features

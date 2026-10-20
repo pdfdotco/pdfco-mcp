@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.pdfdotco/pdfco-mcp",
+  "title": "PDF.co",
+  "description": "Official PDF.co MCP server: convert, merge, split, OCR, search and fill PDFs through the PDF.co API",
+  "repository": {
+    "url": "https://github.com/pdfdotco/pdfco-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://developer.pdf.co",
+  "version": "0.0.11",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "pdfco-mcp",
+      "version": "0.0.11",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "X_API_KEY",
+          "description": "Your PDF.co API key (from https://app.pdf.co)",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
