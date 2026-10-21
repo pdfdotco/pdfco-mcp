@@ -7,7 +7,7 @@ PDF.co MCP Server provides [PDF.co API](https://pdf.co) functionality through th
 ### 📄 PDF Conversion Tools
 - **PDF → Various Formats**: Convert PDFs to JSON, CSV, Text, Excel (XLS/XLSX), XML, HTML, Images (JPG/PNG/WebP/TIFF)
 - **Various Formats → PDF**: Convert documents (DOC/DOCX/RTF/TXT), spreadsheets (CSV/XLS/XLSX), images, web pages, HTML, emails (MSG/EML) to PDF
-- **Excel Conversions**: Convert Excel files to CSV, JSON, HTML, TXT, XML, PDF
+- **Excel Conversions**: Convert Excel files to PDF
 
 ### 🛠️ PDF Editing & Modification
 - **PDF Merging**: Combine multiple PDF files into one
@@ -113,11 +113,15 @@ Add the following to your `claude_desktop_config.json` file:
 - `email_to_pdf`: Convert email to PDF
 
 ### Excel Conversion Tools
-- `excel_to_csv`: Convert Excel(XLS, XLSX) to CSV
-- `excel_to_json`: Convert Excel(XLS, XLSX) to JSON
-- `excel_to_html`: Convert Excel(XLS, XLSX) to HTML
-- `excel_to_txt`: Convert Excel(XLS, XLSX) to TXT
-- `excel_to_xml`: Convert Excel(XLS, XLSX) to XML
+> **Retirement Notice — January 5, 2027**
+>
+> The following Excel conversion tools are scheduled for retirement on **January 5, 2027**, following the discontinuation of their underlying PDF.co API endpoints: `excel_to_csv`, `excel_to_json`, `excel_to_html`, `excel_to_txt`, `excel_to_xml`. These tools will remain available until the retirement date. After January 5, 2027, requests to their underlying API endpoints will no longer be supported. `excel_to_pdf` is not affected.
+
+- `excel_to_csv`: Convert Excel(XLS, XLSX) to CSV (retiring January 5, 2027)
+- `excel_to_json`: Convert Excel(XLS, XLSX) to JSON (retiring January 5, 2027)
+- `excel_to_html`: Convert Excel(XLS, XLSX) to HTML (retiring January 5, 2027)
+- `excel_to_txt`: Convert Excel(XLS, XLSX) to TXT (retiring January 5, 2027)
+- `excel_to_xml`: Convert Excel(XLS, XLSX) to XML (retiring January 5, 2027)
 - `excel_to_pdf`: Convert Excel(XLS, XLSX) to PDF
 
 ### PDF Editing Tools
