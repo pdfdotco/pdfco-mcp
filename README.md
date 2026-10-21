@@ -56,27 +56,19 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 For more installation options and details, see the [UV installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 
-### MCP Server Setup
+### Connect your client
 
-#### Cursor IDE Configuration
-Add the following to your `.cursor/mcp.json` file:
+Step-by-step guides with screenshots for each client are on developer.pdf.co:
 
-```json
-{
-  "mcpServers": {
-    "pdfco": {
-      "command": "uvx",
-      "args": ["pdfco-mcp"],
-      "env": {
-        "X_API_KEY": "YOUR_API_KEY_HERE"
-      }
-    }
-  }
-}
-```
+- [Overview](https://developer.pdf.co/api/mcp/overview)
+- [Claude Desktop](https://developer.pdf.co/api/mcp/claude-desktop)
+- [ChatGPT desktop and Codex](https://developer.pdf.co/api/mcp/chatgpt-desktop)
+- [Codex CLI](https://developer.pdf.co/api/mcp/codex-cli)
+- [Claude Code](https://developer.pdf.co/api/mcp/claude-code)
+- [Cursor](https://developer.pdf.co/api/mcp/cursor)
+- [VS Code](https://developer.pdf.co/api/mcp/vs-code)
 
-#### Claude Desktop Configuration
-Add the following to your `claude_desktop_config.json` file:
+Any other client that runs local MCP servers over STDIO uses the same three values: the command `uvx`, the argument `pdfco-mcp`, and the environment variable `X_API_KEY`. In JSON form:
 
 ```json
 {
@@ -91,6 +83,8 @@ Add the following to your `claude_desktop_config.json` file:
   }
 }
 ```
+
+Desktop apps often do not see your terminal's `PATH`; if the server fails to start, use the full path to `uvx` as the command. `uvx` keeps the version it first resolved, so run `uvx pdfco-mcp@latest` once to pick up a new release.
 
 ## 🔧 Available Tools
 
