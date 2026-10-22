@@ -1089,6 +1089,7 @@ async def excel_to_csv(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to CSV.
+    Retiring on January 5, 2027: the underlying PDF.co API endpoint is being discontinued. The tool keeps working until that date and will be removed afterwards.
     Ref: https://developer.pdf.co/api/convert-from-excel/csv.md
     """
     return await convert_to(
@@ -1141,6 +1142,7 @@ async def excel_to_json(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to JSON.
+    Retiring on January 5, 2027: the underlying PDF.co API endpoint is being discontinued. The tool keeps working until that date and will be removed afterwards.
     Ref: https://developer.pdf.co/api/convert-from-excel/json.md
     """
     return await convert_to(
@@ -1193,6 +1195,7 @@ async def excel_to_html(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to HTML.
+    Retiring on January 5, 2027: the underlying PDF.co API endpoint is being discontinued. The tool keeps working until that date and will be removed afterwards.
     Ref: https://developer.pdf.co/api/convert-from-excel/html.md
     """
     return await convert_to(
@@ -1245,6 +1248,7 @@ async def excel_to_txt(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to TXT.
+    Retiring on January 5, 2027: the underlying PDF.co API endpoint is being discontinued. The tool keeps working until that date and will be removed afterwards.
     Ref: https://developer.pdf.co/api/convert-from-excel/text.md
     """
     return await convert_to(
@@ -1297,6 +1301,7 @@ async def excel_to_xml(
 ) -> BaseResponse:
     """
     Convert Excel(XLS, XLSX) to XML.
+    Retiring on January 5, 2027: the underlying PDF.co API endpoint is being discontinued. The tool keeps working until that date and will be removed afterwards.
     Ref: https://developer.pdf.co/api/convert-from-excel/xml.md
     """
     return await convert_to(
