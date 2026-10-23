@@ -35,9 +35,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [set-version]
+    permissions:
+      contents: write
+      id-token: write # lets mcp-publisher authenticate to the MCP Registry with GitHub OIDC
     steps:
       - name: Check out
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false # no step in this job needs the git credential; keeps GITHUB_TOKEN out of .git/config
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -75,3 +80,43 @@ jobs:
             file_glob: true
             tag: ${{ github.ref }}
             overwrite: true
+
+      - name: Wait for PyPI to serve the new version
+        run: |
+          for attempt in $(seq 1 20); do
+            if curl -fsS "https://pypi.org/pypi/pdfco-mcp/${RELEASE_VERSION}/json" > /dev/null; then
+              echo "pdfco-mcp ${RELEASE_VERSION} is on PyPI"
+              exit 0
+            fi
+            echo "attempt ${attempt}: not yet visible, retrying in 15s"
+            sleep 15
+          done
+          echo "pdfco-mcp ${RELEASE_VERSION} did not appear on PyPI in time" >&2
+          exit 1
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+
+      - name: Set the release version in server.json
+        run: |
+          jq --arg v "$RELEASE_VERSION" '.version = $v | .packages[].version = $v' server.json > server.tmp
+          mv server.tmp server.json
+          cat server.json
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+
+      - name: Install mcp-publisher
+        # Pinned release of the official registry CLI, verified against the
+        # sha256 GitHub records for the asset. Bump both values together.
+        run: |
+          curl -fsSL -o mcp-publisher.tar.gz "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz"
+          echo "${MCP_PUBLISHER_SHA256}  mcp-publisher.tar.gz" | sha256sum --check
+          tar xzf mcp-publisher.tar.gz mcp-publisher
+        env:
+          MCP_PUBLISHER_VERSION: v1.8.1
+          MCP_PUBLISHER_SHA256: a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc
+
+      - name: Log in to the MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish the listing to the MCP Registry
+        run: ./mcp-publisher publish server.json
