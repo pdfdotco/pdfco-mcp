@@ -157,7 +157,25 @@ async def request(
     payload = params.parse_payload(async_mode=True)
     if custom_payload:
         payload.update(custom_payload)
+    return await post(endpoint, payload, api_key=api_key)
 
+
+async def submit_background_job(
+    endpoint: str, inputs: dict, api_key: str | None = None
+) -> BaseResponse:
+    """Submit to an endpoint that always runs in the background.
+
+    These endpoints take no ``async`` flag, and the shared ``ConversionParams``
+    defaults (``lang``, ``lineGrouping``) do not belong to them, so only the
+    inputs the caller set are sent.
+    """
+    payload = {k: v for k, v in inputs.items() if v is not None and v != ""}
+    return await post(endpoint, payload, api_key=api_key)
+
+
+async def post(
+    endpoint: str, payload: dict, api_key: str | None = None
+) -> BaseResponse:
     url = f"/v1/{endpoint}"
     try:
         async with PDFCoClient(api_key=api_key) as client:
