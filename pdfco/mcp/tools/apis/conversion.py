@@ -1,6 +1,8 @@
 from pdfco.mcp.server import mcp
-from pdfco.mcp.services.pdf import convert_to, convert_from
+from pdfco.mcp.services.pdf import convert_to, convert_from, submit_background_job
 from pdfco.mcp.models import BaseResponse, ConversionParams
+
+from typing import Literal
 
 from pydantic import Field
 
@@ -1369,4 +1371,101 @@ async def excel_to_pdf(
             worksheetIndex=worksheetIndex,
         ),
         api_key=api_key,
+    )
+
+
+def _with_result_tip(response: BaseResponse, tip: str) -> BaseResponse:
+    if response.status == "working":
+        response.tips = f"{response.tips} {tip}"
+    return response
+
+
+@mcp.tool()
+async def pdf_to_pdfa(
+    url: str = Field(
+        description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
+    ),
+    name: str = Field(
+        description="File name for the converted PDF. The validation report is named after it. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output and report links in minutes; the files are deleted afterwards. API default is 60; capped at seven days for PDF/A. (Optional)",
+        default=None,
+    ),
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default="",
+    ),
+) -> BaseResponse:
+    """
+    Convert a PDF to PDF/A-3b and validate the result with veraPDF.
+    The job always runs in the background: this returns a job ID, and the result comes from 'wait_job_completion'.
+    A result that is not compliant still finishes as success, so check `isCompliant` and `validationReportUrl` in the result.
+    Ref: https://developer.pdf.co/api/pdf-to-pdfa.md
+    """
+    response = await submit_background_job(
+        "pdf/convert/to/pdfa",
+        {"url": url, "name": name, "expiration": expiration},
+        api_key=api_key,
+    )
+    return _with_result_tip(
+        response,
+        "The job succeeds even when the output is not PDF/A compliant; check `isCompliant` and `validationReportUrl` in the result.",
+    )
+
+
+@mcp.tool()
+async def pdf_to_e_invoice(
+    url: str = Field(
+        description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
+    ),
+    xml_url: str = Field(
+        description="URL to the invoice XML (CrossIndustryInvoice) to embed. Use a public or temporary presigned URL; the HTTP auth inputs do not apply to it. The XML decides the conformance level (MINIMUM, BASIC WL, BASIC, EN16931 or EXTENDED)."
+    ),
+    profile: Literal["facturx", "zugferd"] = Field(
+        description="Invoice profile family: 'facturx' (Factur-X) or 'zugferd' (ZUGFeRD)."
+    ),
+    httpusername: str = Field(
+        description="HTTP auth user name for the source PDF URL only. (Optional)",
+        default="",
+    ),
+    httppassword: str = Field(
+        description="HTTP auth password for the source PDF URL only. (Optional)",
+        default="",
+    ),
+    name: str = Field(
+        description="File name for the output PDF. (Optional)", default=""
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output and report links in minutes; the files are deleted afterwards. API default is 60. (Optional)",
+        default=None,
+    ),
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default="",
+    ),
+) -> BaseResponse:
+    """
+    Create a Factur-X or ZUGFeRD e-invoice by embedding invoice XML into a PDF, converting it to PDF/A-3 and validating it with veraPDF and Mustang.
+    The job always runs in the background: this returns a job ID, and the result comes from 'wait_job_completion'.
+    An e-invoice that fails validation ends as a failed job and the charge is refunded; `validationReportUrl` in the result explains why.
+    Ref: https://developer.pdf.co/api/pdf-to-e-invoice.md
+    """
+    response = await submit_background_job(
+        "pdf/convert/to/e-invoice",
+        {
+            "url": url,
+            "xml_url": xml_url,
+            "profile": profile,
+            "httpusername": httpusername,
+            "httppassword": httppassword,
+            "name": name,
+            "expiration": expiration,
+        },
+        api_key=api_key,
+    )
+    return _with_result_tip(
+        response,
+        "If the e-invoice fails validation the job ends as failed and is refunded; `validationReportUrl` in the result explains why.",
     )

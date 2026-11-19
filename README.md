@@ -10,6 +10,7 @@ PDF.co MCP Server provides [PDF.co API](https://pdf.co) functionality through th
 - **PDF → Various Formats**: Convert PDFs to JSON, CSV, Text, Excel (XLS/XLSX), XML, HTML, Images (JPG/PNG/WebP/TIFF)
 - **Various Formats → PDF**: Convert documents (DOC/DOCX/RTF/TXT), spreadsheets (CSV/XLS/XLSX), images, web pages, HTML, emails (MSG/EML) to PDF
 - **Excel Conversions**: Convert Excel files to PDF
+- **Archiving & E-Invoicing**: Convert PDFs to PDF/A with a validation report, and embed invoice XML to produce Factur-X or ZUGFeRD e-invoices
 
 ### 🛠️ PDF Editing & Modification
 - **PDF Merging**: Combine multiple PDF files into one
@@ -99,6 +100,8 @@ Desktop apps often do not see your terminal's `PATH`; if the server fails to sta
 - `pdf_to_xml`: Convert PDF and scanned images to XML format
 - `pdf_to_html`: Convert PDF and scanned images to HTML format
 - `pdf_to_image`: Convert PDF and scanned images to various image formats (JPG, PNG, WebP, TIFF)
+- `pdf_to_pdfa`: Convert PDF to PDF/A for long-term archiving; the result reports `isCompliant` and links a validation report
+- `pdf_to_e_invoice`: Embed invoice XML into a PDF to produce a Factur-X or ZUGFeRD e-invoice; a non-compliant result fails and is refunded, with a validation report link
 
 ### Document to PDF Conversion Tools
 - `document_to_pdf`: Convert various document types (DOC, DOCX, RTF, TXT, XLS, XLSX, CSV, HTML, JPG, PNG, TIFF, WEBP) into PDF

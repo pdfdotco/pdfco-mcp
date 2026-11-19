@@ -12,7 +12,9 @@ NON_API_TOOLS = {
     "get_job_check",
     "wait_job_completion",
 }
-EXPECTED_TOOL_COUNT = 38
+# Background-only endpoints that take `expiration` but not `profiles`.
+NO_PROFILES_TOOLS = {"pdf_to_pdfa", "pdf_to_e_invoice"}
+EXPECTED_TOOL_COUNT = 40
 
 
 def input_schema(tool) -> dict:
@@ -22,6 +24,8 @@ def input_schema(tool) -> dict:
 
 def dummy_for(schema: dict):
     """A value of the right JSON type for a required parameter."""
+    if "enum" in schema:
+        return schema["enum"][0]
     kind = schema.get("type")
     if isinstance(kind, list):
         kind = next(k for k in kind if k != "null")
@@ -56,18 +60,16 @@ async def test_shared_inputs_reach_every_api_tool(api, call):
             for name in input_schema(tool).get("required", [])
         }
 
-        result = await call(
-            tool.name,
-            **required,
-            api_key="k-test",
-            profiles='{"TrimSpaces": true}',
-            expiration=5,
-        )
+        takes_profiles = tool.name not in NO_PROFILES_TOOLS
+        if takes_profiles:
+            required["profiles"] = '{"TrimSpaces": true}'
+        result = await call(tool.name, **required, api_key="k-test", expiration=5)
 
         assert result.status == "working", (tool.name, result)
         assert api.last.headers["x-api-key"] == "k-test", tool.name
         payload = api.last_payload
-        assert payload["profiles"] == '{"TrimSpaces": true}', tool.name
+        if takes_profiles:
+            assert payload["profiles"] == '{"TrimSpaces": true}', tool.name
         assert payload["expiration"] == 5, tool.name
 
 
@@ -110,3 +112,47 @@ def test_payload_omits_unset_and_empty_values():
         "lang": "eng",
         "lineGrouping": "0",
     }
+
+
+async def test_pdfa_sends_only_its_own_inputs(api, call):
+    result = await call(
+        "pdf_to_pdfa", url="https://example.com/in.pdf", name="out.pdf", api_key="k"
+    )
+    # The endpoint takes no `async` flag and none of the shared conversion defaults.
+    assert api.last.url.path == "/v1/pdf/convert/to/pdfa"
+    assert api.last_payload == {"url": "https://example.com/in.pdf", "name": "out.pdf"}
+    assert "wait_job_completion" in result.tips
+    assert "isCompliant" in result.tips
+
+
+async def test_e_invoice_sends_xml_profile_and_source_credentials(api, call):
+    result = await call(
+        "pdf_to_e_invoice",
+        url="https://example.com/in.pdf",
+        xml_url="https://example.com/invoice.xml",
+        profile="zugferd",
+        httpusername="user",
+        httppassword="pass",
+        api_key="k",
+    )
+    assert api.last.url.path == "/v1/pdf/convert/to/e-invoice"
+    assert api.last_payload == {
+        "url": "https://example.com/in.pdf",
+        "xml_url": "https://example.com/invoice.xml",
+        "profile": "zugferd",
+        "httpusername": "user",
+        "httppassword": "pass",
+    }
+    assert "validationReportUrl" in result.tips
+
+
+async def test_e_invoice_rejects_an_unknown_profile(api, call):
+    with pytest.raises(Exception):
+        await call(
+            "pdf_to_e_invoice",
+            url="https://example.com/in.pdf",
+            xml_url="https://example.com/invoice.xml",
+            profile="xrechnung",
+            api_key="k",
+        )
+    assert api.requests == []
