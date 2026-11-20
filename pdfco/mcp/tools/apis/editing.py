@@ -1,4 +1,4 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import pdf_add
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
@@ -6,7 +6,7 @@ from pydantic import Field
 from typing import List, Any
 
 
-@mcp.tool()
+@mcp.tool(title="Add annotations, images and fields", annotations=ADDITIVE_WRITE)
 async def pdf_add_annotations_images_fields(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

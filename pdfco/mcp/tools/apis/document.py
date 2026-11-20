@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import get_pdf_info
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Get PDF information", annotations=READ_ONLY)
 async def pdf_info_reader(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

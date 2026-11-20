@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import add_pdf_password, remove_pdf_password
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Add PDF password", annotations=ADDITIVE_WRITE)
 async def pdf_add_password(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -129,7 +129,7 @@ async def pdf_add_password(
     return await add_pdf_password(params, **additional_params, api_key=api_key)
 
 
-@mcp.tool()
+@mcp.tool(title="Remove PDF password", annotations=ADDITIVE_WRITE)
 async def pdf_remove_password(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

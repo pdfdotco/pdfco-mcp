@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import find_text_in_pdf, find_table_in_pdf
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool(name="find_text")
+@mcp.tool(name="find_text", title="Find text in PDF", annotations=READ_ONLY)
 async def find_text(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -68,7 +68,7 @@ async def find_text(
     )
 
 
-@mcp.tool(name="find_table")
+@mcp.tool(name="find_table", title="Find tables in PDF", annotations=ADDITIVE_WRITE)
 async def find_table(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

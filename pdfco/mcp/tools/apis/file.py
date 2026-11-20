@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.client import PDFCoClient
 from pdfco.mcp.models import BaseResponse
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Upload file", annotations=ADDITIVE_WRITE)
 async def upload_file(
     file_path: str = Field(description="The absolute path to the file to upload"),
     api_key: str = Field(

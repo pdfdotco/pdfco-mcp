@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import merge_pdf, split_pdf
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Merge PDFs", annotations=ADDITIVE_WRITE)
 async def pdf_merge(
     url: str = Field(
         description="URLs to the source files as a comma-separated list. Supports PDF, DOC, DOCX, RTF, TXT, XLS, XLSX, CSV, images, and more. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -51,7 +51,7 @@ async def pdf_merge(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Split PDF", annotations=ADDITIVE_WRITE)
 async def pdf_split(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
