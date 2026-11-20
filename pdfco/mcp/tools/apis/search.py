@@ -68,7 +68,7 @@ async def find_text(
     )
 
 
-@mcp.tool(name="find_table", title="Find tables in PDF", annotations=READ_ONLY)
+@mcp.tool(name="find_table", title="Find tables in PDF", annotations=ADDITIVE_WRITE)
 async def find_table(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

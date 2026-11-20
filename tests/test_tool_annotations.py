@@ -8,7 +8,6 @@ READ_ONLY_TOOLS = {
     "pdf_info_reader",
     "read_pdf_forms_info",
     "find_text",
-    "find_table",
 }
 
 
