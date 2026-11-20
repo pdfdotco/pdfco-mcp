@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import get_pdf_form_fields_info, fill_pdf_form_fields
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Read PDF form fields", annotations=READ_ONLY)
 async def read_pdf_forms_info(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -48,7 +48,7 @@ async def read_pdf_forms_info(
     return await get_pdf_form_fields_info(params, api_key=api_key)
 
 
-@mcp.tool(name="fill_forms")
+@mcp.tool(name="fill_forms", title="Fill PDF forms", annotations=ADDITIVE_WRITE)
 async def fill_pdf_forms(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -108,7 +108,11 @@ async def fill_pdf_forms(
     return await fill_pdf_form_fields(params, fields=fields, api_key=api_key)
 
 
-@mcp.tool(name="create_fillable_forms")
+@mcp.tool(
+    name="create_fillable_forms",
+    title="Create fillable PDF forms",
+    annotations=ADDITIVE_WRITE,
+)
 async def create_fillable_forms(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

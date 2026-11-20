@@ -1,4 +1,4 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import convert_to, convert_from, submit_background_job
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
@@ -7,7 +7,7 @@ from typing import Literal
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to JSON", annotations=ADDITIVE_WRITE)
 async def pdf_to_json(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -84,7 +84,7 @@ async def pdf_to_json(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to CSV", annotations=ADDITIVE_WRITE)
 async def pdf_to_csv(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -161,7 +161,7 @@ async def pdf_to_csv(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to text", annotations=ADDITIVE_WRITE)
 async def pdf_to_text(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -238,7 +238,7 @@ async def pdf_to_text(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to XLS", annotations=ADDITIVE_WRITE)
 async def pdf_to_xls(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -315,7 +315,7 @@ async def pdf_to_xls(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to XLSX", annotations=ADDITIVE_WRITE)
 async def pdf_to_xlsx(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -392,7 +392,7 @@ async def pdf_to_xlsx(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to XML", annotations=ADDITIVE_WRITE)
 async def pdf_to_xml(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -469,7 +469,7 @@ async def pdf_to_xml(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to HTML", annotations=ADDITIVE_WRITE)
 async def pdf_to_html(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -546,7 +546,7 @@ async def pdf_to_html(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to image", annotations=ADDITIVE_WRITE)
 async def pdf_to_image(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -632,7 +632,7 @@ async def pdf_to_image(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Document to PDF", annotations=ADDITIVE_WRITE)
 async def document_to_pdf(
     url: str = Field(
         description="URL to the source file (DOC, DOCX, RTF, TXT, XPS). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -690,7 +690,7 @@ async def document_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="CSV to PDF", annotations=ADDITIVE_WRITE)
 async def csv_to_pdf(
     url: str = Field(
         description="URL to the source file (CSV, XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -748,7 +748,7 @@ async def csv_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Image to PDF", annotations=ADDITIVE_WRITE)
 async def image_to_pdf(
     url: str = Field(
         description="URL to the source file (JPG, PNG, TIFF). Multiple files are supported (by providing a comma-separated list of URLs). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -802,7 +802,7 @@ async def image_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Web page to PDF", annotations=ADDITIVE_WRITE)
 async def webpage_to_pdf(
     url: str = Field(description="URL to the source file (external webpage URL)."),
     margins: str = Field(
@@ -899,7 +899,7 @@ async def webpage_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="HTML to PDF", annotations=ADDITIVE_WRITE)
 async def html_to_pdf(
     html: str = Field(
         description="Input HTML code to be converted. To convert the link to a PDF use the /pdf/convert/from/url endpoint instead. If it is a local file, just pass the file content as a string."
@@ -998,7 +998,7 @@ async def html_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Email to PDF", annotations=ADDITIVE_WRITE)
 async def email_to_pdf(
     url: str = Field(
         description="URL to the source file (MSG, EML). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1057,7 +1057,7 @@ async def email_to_pdf(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to CSV", annotations=ADDITIVE_WRITE)
 async def excel_to_csv(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1110,7 +1110,7 @@ async def excel_to_csv(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to JSON", annotations=ADDITIVE_WRITE)
 async def excel_to_json(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1163,7 +1163,7 @@ async def excel_to_json(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to HTML", annotations=ADDITIVE_WRITE)
 async def excel_to_html(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1216,7 +1216,7 @@ async def excel_to_html(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to text", annotations=ADDITIVE_WRITE)
 async def excel_to_txt(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1269,7 +1269,7 @@ async def excel_to_txt(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to XML", annotations=ADDITIVE_WRITE)
 async def excel_to_xml(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1322,7 +1322,7 @@ async def excel_to_xml(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="Excel to PDF", annotations=ADDITIVE_WRITE)
 async def excel_to_pdf(
     url: str = Field(
         description="URL to the source file (XLS, XLSX). Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1380,7 +1380,7 @@ def _with_result_tip(response: BaseResponse, tip: str) -> BaseResponse:
     return response
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to PDF/A", annotations=ADDITIVE_WRITE)
 async def pdf_to_pdfa(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -1415,7 +1415,7 @@ async def pdf_to_pdfa(
     )
 
 
-@mcp.tool()
+@mcp.tool(title="PDF to e-invoice", annotations=ADDITIVE_WRITE)
 async def pdf_to_e_invoice(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import make_pdf_searchable, make_pdf_unsearchable
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="Make PDF searchable", annotations=ADDITIVE_WRITE)
 async def pdf_make_searchable(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -65,7 +65,7 @@ async def pdf_make_searchable(
     return await make_pdf_searchable(params, api_key=api_key)
 
 
-@mcp.tool()
+@mcp.tool(title="Make PDF unsearchable", annotations=ADDITIVE_WRITE)
 async def pdf_make_unsearchable(
     url: str = Field(
         description="URL to the source file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."

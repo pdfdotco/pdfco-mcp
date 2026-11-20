@@ -1,11 +1,11 @@
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.pdf import parse_invoice, extract_pdf_attachments
 from pdfco.mcp.models import BaseResponse, ConversionParams
 
 from pydantic import Field
 
 
-@mcp.tool()
+@mcp.tool(title="AI invoice parser", annotations=ADDITIVE_WRITE)
 async def ai_invoice_parser(
     url: str = Field(
         description="URL to the source PDF file. Supports publicly accessible links including Google Drive, Dropbox, PDF.co Built-In Files Storage. Use 'upload_file' tool to upload local files."
@@ -27,7 +27,7 @@ async def ai_invoice_parser(
     return await parse_invoice(params, api_key=api_key)
 
 
-@mcp.tool()
+@mcp.tool(title="Extract PDF attachments", annotations=ADDITIVE_WRITE)
 async def extract_attachments(
     url: str = Field(description="URL to the source PDF file."),
     httpusername: str = Field(

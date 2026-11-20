@@ -1,6 +1,6 @@
 import asyncio
 import time
-from pdfco.mcp.server import mcp
+from pdfco.mcp.server import mcp, READ_ONLY, ADDITIVE_WRITE
 from pdfco.mcp.services.client import PDFCoClient
 from pdfco.mcp.models import BaseResponse
 
@@ -40,7 +40,7 @@ async def _get_job_status(job_id: str, api_key: str = "") -> BaseResponse:
         )
 
 
-@mcp.tool()
+@mcp.tool(title="Check job status", annotations=READ_ONLY)
 async def get_job_check(
     job_id: str = Field(description="The ID of the job to get the status of"),
     api_key: str = Field(
@@ -60,7 +60,7 @@ async def get_job_check(
     return await _get_job_status(job_id, api_key)
 
 
-@mcp.tool()
+@mcp.tool(title="Wait for job completion", annotations=READ_ONLY)
 async def wait_job_completion(
     job_id: str = Field(description="The ID of the job to get the status of"),
     interval: int = Field(
