@@ -1469,3 +1469,48 @@ async def pdf_to_e_invoice(
         response,
         "If the e-invoice fails validation the job ends as failed and is refunded; `validationReportUrl` in the result explains why.",
     )
+
+
+@mcp.tool(title="Markdown to PDF", annotations=ADDITIVE_WRITE)
+async def markdown_to_pdf(
+    markdown: str = Field(
+        description="Markdown text to convert (UTF-8, up to 4 MiB). Provide either this or 'url', not both. Use absolute URLs for images; relative paths cannot be resolved from inline text.",
+        default="",
+    ),
+    url: str = Field(
+        description="Public HTTP(S) URL to a UTF-8 Markdown file (up to 4 MiB). Provide either this or 'markdown', not both. Relative images and links resolve against this URL.",
+        default="",
+    ),
+    name: str = Field(
+        description="File name for the output PDF. Defaults to markdown.pdf. (Optional)",
+        default="",
+    ),
+    expiration: int | None = Field(
+        description="Lifetime of the output link in minutes, from 1 to 10080; the file is deleted afterwards. API default is 60. (Optional)",
+        default=None,
+    ),
+    api_key: str = Field(
+        description="PDF.co API key. If not provided, will use X_API_KEY environment variable. (Optional)",
+        default="",
+    ),
+) -> BaseResponse:
+    """
+    Convert Markdown into a PDF (Letter portrait, fixed stylesheet) with tables, code blocks, footnotes, images and CJK text.
+    The job always runs in the background: this returns a job ID, and the result comes from 'wait_job_completion'.
+    A successful result can carry `warnings` (for example an image that could not be loaded was omitted); check them before using the PDF.
+    Ref: https://developer.pdf.co/api/pdf-from-markdown.md
+    """
+    if bool(markdown) == bool(url):
+        return BaseResponse(
+            status="error",
+            content="Provide exactly one of markdown or url.",
+        )
+    response = await submit_background_job(
+        "pdf/convert/from/md",
+        {"markdown": markdown, "url": url, "name": name, "expiration": expiration},
+        api_key=api_key,
+    )
+    return _with_result_tip(
+        response,
+        "A successful result can include `warnings` about omitted images or links; check them before using the PDF.",
+    )

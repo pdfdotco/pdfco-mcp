@@ -13,8 +13,10 @@ NON_API_TOOLS = {
     "wait_job_completion",
 }
 # Background-only endpoints that take `expiration` but not `profiles`.
-NO_PROFILES_TOOLS = {"pdf_to_pdfa", "pdf_to_e_invoice"}
-EXPECTED_TOOL_COUNT = 40
+NO_PROFILES_TOOLS = {"pdf_to_pdfa", "pdf_to_e_invoice", "markdown_to_pdf"}
+# Tools with no required input that still need one source to reach the API.
+SOURCE_INPUTS = {"markdown_to_pdf": {"url": "https://example.com/input.md"}}
+EXPECTED_TOOL_COUNT = 41
 
 
 def input_schema(tool) -> dict:
@@ -59,6 +61,7 @@ async def test_shared_inputs_reach_every_api_tool(api, call):
             name: dummy_for(props[name])
             for name in input_schema(tool).get("required", [])
         }
+        required.update(SOURCE_INPUTS.get(tool.name, {}))
 
         takes_profiles = tool.name not in NO_PROFILES_TOOLS
         if takes_profiles:
@@ -155,4 +158,41 @@ async def test_e_invoice_rejects_an_unknown_profile(api, call):
             profile="xrechnung",
             api_key="k",
         )
+    assert api.requests == []
+
+
+async def test_markdown_sends_inline_text_only(api, call):
+    result = await call("markdown_to_pdf", markdown="# Title\n\nBody", api_key="k")
+    # Background-only: no `async` flag, and empty optional inputs are left out
+    # because the endpoint rejects empty strings.
+    assert api.last.url.path == "/v1/pdf/convert/from/md"
+    assert api.last_payload == {"markdown": "# Title\n\nBody"}
+    assert "wait_job_completion" in result.tips
+    assert "warnings" in result.tips
+
+
+async def test_markdown_sends_url_name_and_integer_expiration(api, call):
+    await call(
+        "markdown_to_pdf",
+        url="https://example.com/doc.md",
+        name="doc.pdf",
+        expiration=120,
+        api_key="k",
+    )
+    assert api.last_payload == {
+        "url": "https://example.com/doc.md",
+        "name": "doc.pdf",
+        "expiration": 120,
+    }
+
+
+@pytest.mark.parametrize(
+    "sources",
+    [{}, {"markdown": "# Title", "url": "https://example.com/doc.md"}],
+    ids=["neither", "both"],
+)
+async def test_markdown_needs_exactly_one_source(api, call, sources):
+    result = await call("markdown_to_pdf", **sources, api_key="k")
+    assert result.status == "error"
+    assert "exactly one of markdown or url" in result.content
     assert api.requests == []
