@@ -247,3 +247,18 @@ async def test_tool_list_is_local_minus_upload_file_without_api_key(serve, oauth
         assert tool.annotations == local[name].annotations, name
     assert upload.is_error
     assert "Unknown tool" in upload.content[0].text
+
+
+async def test_rejected_key_tells_a_hosted_user_to_reconnect(serve, oauth, api):
+    api.respond(401, {"error": True, "errorCode": 401, "message": "Unauthorized"})
+    async with serve() as http:
+        jwt = await sign_in(http, oauth.add_user("alice", "101", "revoked-key"))
+        async with mcp_client(http, jwt) as client:
+            response = parse(
+                await client.call_tool("pdf_info_reader", {"url": "https://f/a.pdf"})
+            )
+    assert len(api.requests) == 1
+    assert response.status == "error"
+    assert "reconnect the PDF.co connector" in response.tips
+    assert "X_API_KEY" not in response.tips
+    assert "api_key" not in response.tips

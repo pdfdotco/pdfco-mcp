@@ -13,6 +13,11 @@ __version__ = importlib.metadata.version("pdfco-mcp")
 print(f"pdfco-mcp version: {__version__}", file=sys.stderr)
 
 
+def in_hosted_session() -> bool:
+    """True while serving a request of an authenticated hosted user."""
+    return get_access_token() is not None
+
+
 def _hosted_api_key() -> str | None:
     """The API key of the authenticated hosted user, or None outside hosted mode.
 
