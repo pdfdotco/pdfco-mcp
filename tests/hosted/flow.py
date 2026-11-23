@@ -25,6 +25,17 @@ from pdfco.mcp.models import BaseResponse
 BASE_URL = "https://mcp.test"
 UPSTREAM_URL = "https://oauth.test"
 RESOURCE = f"{BASE_URL}{MCP_PATH}"
+INITIALIZE = {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "initialize",
+    "params": {
+        "protocolVersion": "2025-06-18",
+        "capabilities": {},
+        "clientInfo": {"name": "t", "version": "0"},
+    },
+}
+MCP_HEADERS = {"Accept": "application/json, text/event-stream"}
 SETTINGS = HostedSettings(
     base_url=BASE_URL,
     upstream_url=UPSTREAM_URL,
@@ -42,6 +53,14 @@ class FakeOAuth:
         self.userinfo_calls: list[str] = []
         self.token_requests: list[dict] = []
         self.userinfo_status = 200
+        # Outage knobs. userinfo_error is raised instead of answering;
+        # userinfo_raw replaces the JSON body; broken_users answer 500.
+        self.userinfo_error: Exception | None = None
+        self.userinfo_raw: str | None = None
+        self.broken_users: set[str] = set()
+        self.userinfo_client_kwargs: list[dict] = []
+        # None, or a callable returning the token endpoint's answer/raising.
+        self.token_failure = None
 
     def add_user(self, name: str, sub: str, api_key: str | None) -> str:
         body = {"sub": sub}
@@ -53,7 +72,12 @@ class FakeOAuth:
     def token_handler(self, request: httpx2.Request) -> httpx2.Response:
         form = {k: v[0] for k, v in parse_qs(request.content.decode()).items()}
         self.token_requests.append(form)
-        name = form["code"].removeprefix("code-")
+        if form["grant_type"] == "refresh_token" and self.token_failure:
+            return self.token_failure()
+        if form["grant_type"] == "refresh_token":
+            name = form["refresh_token"].removeprefix("up-refresh-")
+        else:
+            name = form["code"].removeprefix("code-")
         return httpx2.Response(
             200,
             json={
@@ -73,6 +97,12 @@ class FakeOAuth:
         body = self.users.get(token)
         if body is None:
             return httpx.Response(401, json={"error": "invalid_token"})
+        if self.userinfo_error is not None:
+            raise self.userinfo_error
+        if self.userinfo_raw is not None:
+            return httpx.Response(200, text=self.userinfo_raw)
+        if token.removeprefix("up-access-") in self.broken_users:
+            return httpx.Response(500, json=body)
         # A failing status still carries the user's body, so a verifier that
         # ignored the status would be caught.
         return httpx.Response(self.userinfo_status, json=body)
@@ -170,6 +200,7 @@ async def sign_in(
     )
     assert token.status_code == 200, token.text
     flow["token"] = token.json()
+    flow["client_id"] = client_id
     return flow["token"]["access_token"]
 
 

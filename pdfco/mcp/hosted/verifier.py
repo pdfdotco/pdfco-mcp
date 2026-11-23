@@ -1,7 +1,14 @@
 from fastmcp.server.auth import AccessToken, TokenVerifier
 from httpx import AsyncClient, HTTPError
 
+from pdfco.mcp.hosted.middleware import mark_backend_unavailable
+
 REQUIRED_SCOPES = ["openid", "api"]
+USERINFO_TIMEOUT_SECONDS = 5.0
+
+# Answers in which the account service judged the token itself: expired,
+# revoked, or its user deleted (404). Anything else is no verdict.
+TOKEN_REJECTED = {401, 403, 404}
 
 
 class UserinfoVerifier(TokenVerifier):
@@ -11,6 +18,10 @@ class UserinfoVerifier(TokenVerifier):
     checked its own JWT locally. A 200 answer yields the user's id and API key
     as claims; tool code reads them through `get_access_token()`. Nothing is
     cached, so revocation upstream takes effect on the next request.
+
+    Both kinds of failure return None, which the library turns into a 401.
+    When the service gave no verdict the request is also marked, and the
+    hosted middleware answers 503 instead.
     """
 
     def __init__(self, upstream_url: str):
@@ -21,20 +32,27 @@ class UserinfoVerifier(TokenVerifier):
         self._userinfo_url = f"{upstream_url.rstrip('/')}/oauth/userinfo"
 
     async def verify_token(self, token: str) -> AccessToken | None:
-        async with AsyncClient() as client:
+        async with AsyncClient(timeout=USERINFO_TIMEOUT_SECONDS) as client:
             try:
                 response = await client.get(
                     self._userinfo_url, headers={"Authorization": f"Bearer {token}"}
                 )
-            except HTTPError:
-                # For now an unreachable server counts as a rejected token
-                # (401); outages are to answer 503 instead.
+            except HTTPError as error:
+                mark_backend_unavailable(f"userinfo {type(error).__name__}")
                 return None
-        if response.status_code != 200:
+        if response.status_code in TOKEN_REJECTED:
             return None
-        body = response.json()
-        sub = body.get("sub")
+        if response.status_code != 200:
+            mark_backend_unavailable(f"userinfo HTTP {response.status_code}")
+            return None
+        try:
+            body = response.json()
+        except ValueError:
+            mark_backend_unavailable("userinfo returned a non-JSON body")
+            return None
+        sub = body.get("sub") if isinstance(body, dict) else None
         if not sub:
+            mark_backend_unavailable("userinfo returned no sub")
             return None
         claims = {"sub": str(sub)}
         if body.get("api_key"):
