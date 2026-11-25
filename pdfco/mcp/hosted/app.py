@@ -2,20 +2,32 @@ from collections.abc import Sequence
 
 from fastmcp import FastMCP
 from fastmcp.server.auth import OAuthProxy
+from fastmcp.server.auth.oauth_proxy.models import UpstreamTokenSet
 from fastmcp.server.auth.oauth_proxy.upstream import AsyncOAuth2Client
+from fastmcp.server.dependencies import get_http_request
 from fastmcp.server.transforms import GetToolNext, Transform, Visibility
 from fastmcp.tools import Tool
 from fastmcp.tools.tool_transform import ArgTransformConfig, ToolTransformConfig
 from fastmcp.utilities.versions import VersionSpec
 from key_value.aio.protocols import AsyncKeyValue
 from key_value.aio.stores.memory import MemoryStore
+from mcp.server.auth.provider import RefreshToken
+from mcp.shared.auth import OAuthClientInformationFull, OAuthToken
 from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from pdfco.mcp.hosted.limits import (
+    MCP_REQUESTS_PER_MINUTE,
+    TOKEN_REFRESHES_PER_MINUTE,
+    FixedWindowCounter,
+    RateLimited,
+)
 from pdfco.mcp.hosted.middleware import (
     BackendUnavailableMiddleware,
+    is_rate_limited,
     log_token_error_response,
+    mark_rate_limited,
 )
 from pdfco.mcp.hosted.settings import HostedSettings
 from pdfco.mcp.hosted.verifier import UserinfoVerifier
@@ -67,12 +79,68 @@ class HideApiKey(Transform):
         return None if tool is None else self._apply(tool)
 
 
-class PdfcoOAuthProxy(OAuthProxy):
-    """OAuthProxy whose calls to the upstream token endpoint give up in time.
+# Set on a request once its session has been counted, so the hook below,
+# which the library may call several times in one request, counts it once.
+_COUNTED = "pdfco_session_counted"
 
-    A slow upstream then answers 503 before the client stops waiting. Failed
-    token responses are logged with their status.
+
+class PdfcoOAuthProxy(OAuthProxy):
+    """OAuthProxy with per-session limits and a short upstream timeout.
+
+    A slow upstream answers 503 before the client stops waiting. A session over
+    its limit is refused before any call to the account service. Failed token
+    responses are logged with their status.
     """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mcp_limit = FixedWindowCounter(MCP_REQUESTS_PER_MINUTE)
+        self.refresh_limit = FixedWindowCounter(TOKEN_REFRESHES_PER_MINUTE)
+
+    def _get_verification_token(
+        self, upstream_token_set: UpstreamTokenSet
+    ) -> str | None:
+        # Called after the JWT signature check and before userinfo, so forged
+        # tokens never reach the counter and an over-limit request never
+        # reaches userinfo. Returning None makes the library answer 401, which
+        # the middleware turns into 429.
+        try:
+            state = get_http_request().state
+        except RuntimeError:
+            return super()._get_verification_token(upstream_token_set)
+        if not getattr(state, _COUNTED, False):
+            setattr(state, _COUNTED, True)
+            retry_after = self.mcp_limit.hit(upstream_token_set.upstream_token_id)
+            if retry_after is not None:
+                mark_rate_limited(retry_after)
+        if is_rate_limited(state):
+            return None
+        return super()._get_verification_token(upstream_token_set)
+
+    async def exchange_refresh_token(
+        self,
+        client: OAuthClientInformationFull,
+        refresh_token: RefreshToken,
+        scopes: list[str],
+    ) -> OAuthToken:
+        session = await self._session_of(refresh_token.token)
+        if session is not None:
+            retry_after = self.refresh_limit.hit(session)
+            if retry_after is not None:
+                raise RateLimited(retry_after)
+        return await super().exchange_refresh_token(client, refresh_token, scopes)
+
+    async def _session_of(self, refresh_token: str) -> str | None:
+        """The upstream_token_id behind a refresh token, as the library finds it."""
+        try:
+            payload = self.jwt_issuer.verify_token(
+                refresh_token, expected_token_use="refresh"
+            )
+        except Exception:
+            # The library rejects it with invalid_grant right after.
+            return None
+        mapping = await self._jti_mapping_store.get(key=payload["jti"])
+        return mapping.upstream_token_id if mapping else None
 
     def _create_upstream_oauth_client(self) -> AsyncOAuth2Client:
         default = super()._create_upstream_oauth_client()

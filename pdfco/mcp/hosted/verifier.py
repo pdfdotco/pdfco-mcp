@@ -1,3 +1,5 @@
+import asyncio
+
 from fastmcp.server.auth import AccessToken, TokenVerifier
 from httpx import AsyncClient, HTTPError
 
@@ -5,6 +7,10 @@ from pdfco.mcp.hosted.middleware import mark_backend_unavailable
 
 REQUIRED_SCOPES = ["openid", "api"]
 USERINFO_TIMEOUT_SECONDS = 5.0
+# At most this many userinfo calls at once per process; a request that cannot
+# start one within USERINFO_QUEUE_SECONDS answers 503 instead of piling up.
+USERINFO_CONCURRENCY = 10
+USERINFO_QUEUE_SECONDS = 5.0
 
 # Answers in which the account service judged the token itself: expired,
 # revoked, or its user deleted (404). Anything else is no verdict.
@@ -30,8 +36,21 @@ class UserinfoVerifier(TokenVerifier):
         # returns api_key only with `api`.
         super().__init__(required_scopes=REQUIRED_SCOPES)
         self._userinfo_url = f"{upstream_url.rstrip('/')}/oauth/userinfo"
+        self._slots = asyncio.Semaphore(USERINFO_CONCURRENCY)
 
     async def verify_token(self, token: str) -> AccessToken | None:
+        try:
+            async with asyncio.timeout(USERINFO_QUEUE_SECONDS):
+                await self._slots.acquire()
+        except TimeoutError:
+            mark_backend_unavailable("userinfo concurrency limit reached")
+            return None
+        try:
+            return await self._call_userinfo(token)
+        finally:
+            self._slots.release()
+
+    async def _call_userinfo(self, token: str) -> AccessToken | None:
         async with AsyncClient(timeout=USERINFO_TIMEOUT_SECONDS) as client:
             try:
                 response = await client.get(

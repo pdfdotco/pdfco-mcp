@@ -61,6 +61,8 @@ class FakeOAuth:
         self.userinfo_client_kwargs: list[dict] = []
         # None, or a callable returning the token endpoint's answer/raising.
         self.token_failure = None
+        # user name -> access token the next refresh issues (default unchanged).
+        self.next_access: dict[str, str] = {}
 
     def add_user(self, name: str, sub: str, api_key: str | None) -> str:
         body = {"sub": sub}
@@ -76,12 +78,14 @@ class FakeOAuth:
             return self.token_failure()
         if form["grant_type"] == "refresh_token":
             name = form["refresh_token"].removeprefix("up-refresh-")
+            access = self.next_access.pop(name, f"up-access-{name}")
         else:
             name = form["code"].removeprefix("code-")
+            access = f"up-access-{name}"
         return httpx2.Response(
             200,
             json={
-                "access_token": f"up-access-{name}",
+                "access_token": access,
                 "refresh_token": f"up-refresh-{name}",
                 "token_type": "Bearer",
                 # PDF.co gives authorization_code access tokens 10 days
