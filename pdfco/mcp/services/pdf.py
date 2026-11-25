@@ -1,6 +1,6 @@
 import sys
 from pdfco.mcp.models import BaseResponse, ConversionParams
-from pdfco.mcp.services.client import PDFCoClient
+from pdfco.mcp.services.client import PDFCoClient, in_hosted_session
 
 
 async def convert_to(
@@ -135,9 +135,18 @@ ERROR_TIPS = {
     402: "The account has no credits left. Top up or change the subscription at https://app.pdf.co before retrying.",
     429: "Too many requests. Wait a moment and retry.",
 }
+# Hosted users cannot pass api_key or set X_API_KEY; their key comes from the
+# PDF.co account they connected.
+HOSTED_UNAUTHORIZED_TIP = (
+    "The API key of the connected PDF.co account was rejected. Check the key in "
+    "the PDF.co dashboard at https://app.pdf.co, then disconnect and reconnect "
+    "the PDF.co connector."
+)
 
 
 def _error_tip(code: int | None, message: str | None) -> str:
+    if code == 401 and in_hosted_session():
+        return HOSTED_UNAUTHORIZED_TIP
     if code in ERROR_TIPS:
         return ERROR_TIPS[code]
     return f"The API rejected the request: {message or 'no message'}. Fix the input before retrying."
