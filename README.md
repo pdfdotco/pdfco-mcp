@@ -109,6 +109,7 @@ Desktop apps often do not see your terminal's `PATH`; if the server fails to sta
 - `image_to_pdf`: Convert various image formats (JPG, PNG, TIFF) to PDF
 - `webpage_to_pdf`: Convert external webpage URL to PDF
 - `html_to_pdf`: Convert HTML to PDF
+- `markdown_to_pdf`: Convert Markdown text or a hosted Markdown file to PDF; the result can include `warnings` about omitted images or links
 - `email_to_pdf`: Convert email to PDF
 
 ### Excel Conversion Tools

@@ -18,7 +18,7 @@ async def list_tools():
 
 async def test_every_tool_has_a_title_and_a_read_only_hint():
     tools = await list_tools()
-    assert len(tools) == 40
+    assert len(tools) == 41
     for tool in tools:
         assert tool.title, tool.name
         assert tool.annotations is not None, tool.name
