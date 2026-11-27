@@ -41,7 +41,9 @@ def proxy(oauth, store):
 
     def create_client():
         client = original()
-        client._client = httpx2.AsyncClient(transport=token_transport)
+        client._client = httpx2.AsyncClient(
+            transport=token_transport, event_hooks=client._client.event_hooks
+        )
         return client
 
     auth._create_upstream_oauth_client = create_client

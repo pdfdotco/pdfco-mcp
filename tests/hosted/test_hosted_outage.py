@@ -7,6 +7,7 @@ import httpx2
 import pytest
 
 from pdfco.mcp.hosted.app import UPSTREAM_TIMEOUT_SECONDS, build_auth
+from pdfco.mcp.hosted.middleware import log_token_error_response
 from pdfco.mcp.hosted.verifier import USERINFO_TIMEOUT_SECONDS
 
 from .flow import INITIALIZE, MCP_HEADERS, SETTINGS, sign_in
@@ -110,10 +111,12 @@ def raise_(error):
         lambda: httpx2.Response(503, text="maintenance"),
         raise_(httpx2.ConnectError("refused")),
         raise_(httpx2.ReadTimeout("slow")),
-        lambda: httpx2.Response(400, json={"error": "temporarily_unavailable"}),
         lambda: httpx2.Response(429, text="<html>slow down</html>"),
+        lambda: httpx2.Response(
+            403, text="<html>blocked</html>", headers={"content-type": "text/html"}
+        ),
     ],
-    ids=["500", "503", "connect", "timeout", "oauth-error", "html-429"],
+    ids=["500", "503", "connect", "timeout", "html-429", "html-403"],
 )
 async def test_refresh_without_a_verdict_answers_503(serve, oauth, failure):
     flow = {}
@@ -122,6 +125,70 @@ async def test_refresh_without_a_verdict_answers_503(serve, oauth, failure):
         oauth.token_failure = failure
         response = await refresh(http, flow)
     assert_unavailable(response)
+
+
+def non_json_records(caplog):
+    return [r for r in caplog.records if r.message.endswith(", not JSON")]
+
+
+async def test_refresh_blocked_by_a_waf_logs_non_json_at_error(serve, oauth, caplog):
+    flow = {}
+    async with serve() as http:
+        await sign_in(http, oauth.add_user("alice", "101", "key-alice"), flow)
+        oauth.token_failure = lambda: httpx2.Response(
+            403, text="<html>blocked</html>", headers={"content-type": "text/html"}
+        )
+        response = await refresh(http, flow)
+    assert_unavailable(response)
+    non_json = non_json_records(caplog)
+    assert [r.levelname for r in non_json] == ["ERROR"]
+    assert (
+        non_json[0].message == "PDF.co token endpoint answered 403 text/html, not JSON"
+    )
+
+
+async def test_refresh_upstream_5xx_stays_a_warning(serve, oauth, caplog):
+    flow = {}
+    async with serve() as http:
+        await sign_in(http, oauth.add_user("alice", "101", "key-alice"), flow)
+        oauth.token_failure = lambda: httpx2.Response(502, text="<html>bad</html>")
+        response = await refresh(http, flow)
+    assert_unavailable(response)
+    assert non_json_records(caplog) == []
+    assert "PDF.co token endpoint answered 502" in caplog.text
+
+
+@pytest.mark.parametrize(
+    ("status", "error"),
+    [
+        (401, "invalid_client"),
+        (400, "unauthorized_client"),
+        (400, "invalid_scope"),
+        (400, "invalid_request"),
+        (400, "temporarily_unavailable"),
+    ],
+)
+async def test_refresh_rejected_for_our_client_answers_500(
+    serve, oauth, caplog, status, error
+):
+    flow = {}
+    async with serve() as http:
+        await sign_in(http, oauth.add_user("alice", "101", "key-alice"), flow)
+        oauth.token_failure = lambda: httpx2.Response(
+            status, json={"error": error, "error_description": "secret detail"}
+        )
+        response = await refresh(http, flow)
+    assert response.status_code == 500, response.text
+    assert response.json()["error"] == "server_error"
+    assert response.headers["cache-control"] == "no-store"
+    assert "retry-after" not in response.headers
+    assert "www-authenticate" not in response.headers
+    rejected = [r for r in caplog.records if "rejected this server" in r.message]
+    assert [r.levelname for r in rejected] == ["ERROR"]
+    assert error in rejected[0].message
+    assert "secret detail" not in caplog.text
+    # A JSON answer is the service's own; it is not logged as non-JSON.
+    assert non_json_records(caplog) == []
 
 
 async def test_refresh_rejected_upstream_stays_invalid_grant(serve, oauth):
@@ -152,6 +219,8 @@ async def test_upstream_calls_give_up_after_five_seconds(serve, oauth):
     client = build_auth(SETTINGS)._create_upstream_oauth_client()
     assert UPSTREAM_TIMEOUT_SECONDS == 5.0
     assert client._client.timeout == httpx2.Timeout(UPSTREAM_TIMEOUT_SECONDS)
+    # Guards the private attribute the hook is attached through.
+    assert client._client.event_hooks["response"] == [log_token_error_response]
     await client.aclose()
 
     async with serve() as http:

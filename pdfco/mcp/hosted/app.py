@@ -13,7 +13,10 @@ from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from pdfco.mcp.hosted.middleware import BackendUnavailableMiddleware
+from pdfco.mcp.hosted.middleware import (
+    BackendUnavailableMiddleware,
+    log_token_error_response,
+)
 from pdfco.mcp.hosted.settings import HostedSettings
 from pdfco.mcp.hosted.verifier import UserinfoVerifier
 from pdfco.mcp.server import mcp as local_mcp
@@ -67,17 +70,21 @@ class HideApiKey(Transform):
 class PdfcoOAuthProxy(OAuthProxy):
     """OAuthProxy whose calls to the upstream token endpoint give up in time.
 
-    A slow upstream then answers 503 before the client stops waiting.
+    A slow upstream then answers 503 before the client stops waiting. Failed
+    token responses are logged with their status.
     """
 
     def _create_upstream_oauth_client(self) -> AsyncOAuth2Client:
         default = super()._create_upstream_oauth_client()
-        return AsyncOAuth2Client(
+        client = AsyncOAuth2Client(
             client_id=default.client_id,
             client_secret=default.client_secret,
             token_endpoint_auth_method=default.token_endpoint_auth_method,
             timeout=UPSTREAM_TIMEOUT_SECONDS,
         )
+        # The client takes no hook option; _client is its httpx2 client.
+        client._client.event_hooks = {"response": [log_token_error_response]}
+        return client
 
 
 def build_auth(
