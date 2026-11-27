@@ -10,6 +10,8 @@ from fastmcp import Client
 
 from pdfco.mcp import mcp as local_mcp
 from .flow import (
+    INITIALIZE,
+    MCP_HEADERS,
     RESOURCE,
     jwt_claims,
     mcp_client,
@@ -18,18 +20,6 @@ from .flow import (
     sign_in,
     stored_text,
 )
-
-INITIALIZE = {
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "initialize",
-    "params": {
-        "protocolVersion": "2025-06-18",
-        "capabilities": {},
-        "clientInfo": {"name": "t", "version": "0"},
-    },
-}
-MCP_HEADERS = {"Accept": "application/json, text/event-stream"}
 
 
 async def test_request_without_token_is_refused_with_a_metadata_pointer(serve, oauth):
@@ -117,7 +107,7 @@ async def test_userinfo_without_api_key_is_a_tool_error(serve, oauth, api):
     assert api.requests == []
 
 
-async def test_userinfo_failure_refuses_the_request(serve, oauth, api):
+async def test_userinfo_failure_answers_503(serve, oauth, api):
     async with serve() as http:
         jwt = await sign_in(http, oauth.add_user("alice", "101", "key-alice"))
         oauth.userinfo_status = 500
@@ -126,8 +116,7 @@ async def test_userinfo_failure_refuses_the_request(serve, oauth, api):
             json=INITIALIZE,
             headers={**MCP_HEADERS, "Authorization": f"Bearer {jwt}"},
         )
-    # Every userinfo failure is a 401 for now; outages are to answer 503.
-    assert response.status_code == 401
+    assert response.status_code == 503
     assert api.requests == []
 
 

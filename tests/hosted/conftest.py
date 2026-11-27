@@ -8,7 +8,7 @@ import pytest
 from key_value.aio.stores.memory import MemoryStore
 
 import pdfco.mcp.hosted.verifier as verifier_module
-from pdfco.mcp.hosted.app import MCP_PATH, build_auth, build_hosted_server
+from pdfco.mcp.hosted.app import build_auth, build_hosted_server, build_http_app
 
 from .flow import BASE_URL, SETTINGS, FakeOAuth
 
@@ -20,7 +20,10 @@ def oauth(monkeypatch) -> FakeOAuth:
     monkeypatch.setattr(
         verifier_module,
         "AsyncClient",
-        lambda **kwargs: httpx.AsyncClient(transport=userinfo_transport, **kwargs),
+        lambda **kwargs: (
+            fake.userinfo_client_kwargs.append(kwargs)
+            or httpx.AsyncClient(transport=userinfo_transport, **kwargs)
+        ),
     )
     return fake
 
@@ -38,7 +41,9 @@ def proxy(oauth, store):
 
     def create_client():
         client = original()
-        client._client = httpx2.AsyncClient(transport=token_transport)
+        client._client = httpx2.AsyncClient(
+            transport=token_transport, event_hooks=client._client.event_hooks
+        )
         return client
 
     auth._create_upstream_oauth_client = create_client
@@ -55,8 +60,7 @@ def serve(proxy, api):
 
     @asynccontextmanager
     async def _serve():
-        server = build_hosted_server(proxy)
-        app = server.http_app(path=MCP_PATH, stateless_http=True)
+        app = build_http_app(build_hosted_server(proxy))
         async with app.router.lifespan_context(app):
             async with httpx.AsyncClient(
                 transport=httpx.ASGITransport(app=app), base_url=BASE_URL
