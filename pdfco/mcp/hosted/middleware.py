@@ -14,7 +14,10 @@ import json
 import logging
 
 import httpx2
-from authlib.integrations.base_client import OAuthError
+
+# fastmcp re-exports authlib's class up to 4.2.5 and defines its own from 4.2.6;
+# importing it from fastmcp catches whichever the proxy raises.
+from fastmcp.server.auth.oauth_proxy.upstream import OAuthError
 from fastmcp.server.dependencies import get_http_request
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
