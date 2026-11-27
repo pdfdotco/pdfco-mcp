@@ -1,4 +1,7 @@
-"""Answers 503 instead of 401 when the PDF.co account service could not answer.
+"""Answers 503 or 429 instead of 401 when the refusal is not about the token.
+
+The account service could not answer (503), or the session is over its
+request limit (429).
 
 A 401 tells a client its token is no good, so it refreshes or asks the user to
 sign in again. That is right when the account service rejected the token, and
@@ -8,6 +11,9 @@ middleware turns the 401 that follows into a 503. Upstream errors raised while
 the proxy talks to the token endpoint become a 503 as well, except an OAuth
 error: that is the service judging our own client configuration or request,
 which a retry cannot fix, so it becomes a 500.
+
+A session over its request limit is refused the same way: the proxy marks the
+request (or raises `RateLimited` on /token) and this middleware answers 429.
 """
 
 import json
@@ -21,10 +27,13 @@ from fastmcp.server.auth.oauth_proxy.upstream import OAuthError
 from fastmcp.server.dependencies import get_http_request
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from pdfco.mcp.hosted.limits import RateLimited
+
 logger = logging.getLogger(__name__)
 
 RETRY_AFTER_SECONDS = 30
 _MARK = "pdfco_backend_unavailable"
+_RATE_MARK = "pdfco_rate_limited"
 
 # What the proxy raises when the upstream token endpoint gives no usable answer.
 # A non-JSON body comes only with a status below 500 (a WAF page, say); the
@@ -41,6 +50,12 @@ _MISCONFIGURED_BODY = json.dumps(
     {
         "error": "server_error",
         "error_description": "The PDF.co MCP server is misconfigured.",
+    }
+).encode()
+_RATE_BODY = json.dumps(
+    {
+        "error": "rate_limited",
+        "error_description": "Too many requests for this session. Retry later.",
     }
 ).encode()
 
@@ -72,20 +87,36 @@ async def log_token_error_response(response: httpx2.Response) -> None:
         logger.warning("PDF.co token endpoint answered %s %s", status, shown)
 
 
-async def _send_json(send: Send, status: int, body: bytes, retry: bool) -> None:
+def mark_rate_limited(retry_after: int) -> None:
+    """Record on the current request that its session is over the limit."""
+    try:
+        request = get_http_request()
+    except RuntimeError:
+        return
+    setattr(request.state, _RATE_MARK, retry_after)
+
+
+def is_rate_limited(state) -> bool:
+    """Whether `mark_rate_limited` was called on the request with this state."""
+    return bool(getattr(state, _RATE_MARK, None))
+
+
+async def _send_json(
+    send: Send, status: int, body: bytes, retry_after: int | None
+) -> None:
     headers = [
         (b"content-type", b"application/json"),
         (b"content-length", str(len(body)).encode()),
         (b"cache-control", b"no-store"),
     ]
-    if retry:
-        headers.append((b"retry-after", str(RETRY_AFTER_SECONDS).encode()))
+    if retry_after is not None:
+        headers.append((b"retry-after", str(retry_after).encode()))
     await send({"type": "http.response.start", "status": status, "headers": headers})
     await send({"type": "http.response.body", "body": body})
 
 
 async def _send_unavailable(send: Send) -> None:
-    await _send_json(send, 503, _BODY, retry=True)
+    await _send_json(send, 503, _BODY, RETRY_AFTER_SECONDS)
 
 
 class BackendUnavailableMiddleware:
@@ -106,7 +137,12 @@ class BackendUnavailableMiddleware:
             nonlocal started, replaced
             if message["type"] == "http.response.start":
                 started = True
-                if message["status"] == 401 and scope.get("state", {}).get(_MARK):
+                state = scope.get("state", {})
+                if message["status"] == 401 and state.get(_RATE_MARK):
+                    replaced = True
+                    await _send_json(send, 429, _RATE_BODY, state[_RATE_MARK])
+                    return
+                if message["status"] == 401 and state.get(_MARK):
                     replaced = True
                     await _send_unavailable(send)
                     return
@@ -116,6 +152,10 @@ class BackendUnavailableMiddleware:
 
         try:
             await self.app(scope, receive, guarded_send)
+        except RateLimited as error:
+            if started:
+                raise
+            await _send_json(send, 429, _RATE_BODY, error.retry_after)
         except OAuthError as error:
             # invalid_grant never gets here: the library answers it itself.
             if started:
@@ -125,7 +165,7 @@ class BackendUnavailableMiddleware:
                 scope.get("path"),
                 error.error,
             )
-            await _send_json(send, 500, _MISCONFIGURED_BODY, retry=False)
+            await _send_json(send, 500, _MISCONFIGURED_BODY, None)
         except UPSTREAM_ERRORS as error:
             if started:
                 raise
